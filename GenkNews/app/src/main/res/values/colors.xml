@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#222222</color>
+    <color name="red">#EB2E2E</color>
+    <color name="primary_inverse">#FFFFFFFF</color>
+
+    <color name="colorPrimary">@color/red</color>
+    <color name="colorSecondary">@color/black</color>
+    <color name="colorRecyclerView">#F1F1F1</color>
+    <color name="colorTextCategory">#4E4E4E</color>
+    <color name="backgroundSearch">#D4D4D4</color>
+</resources>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <dimen name="space">8dp</dimen>
+    <dimen name="space_small">4dp</dimen>
+    <dimen name="space_tiny">2dp</dimen>
+    <dimen name="space_bonus">12dp</dimen>
+    <dimen name="space_large">16dp</dimen>
+    <dimen name="space_larges">18dp</dimen>
+    <dimen name="space_larger">24dp</dimen>
+    <dimen name="space_super">32dp</dimen>
+    <dimen name="space_ultimate">36dp</dimen>
+    <dimen name="space_extra">48dp</dimen>
+
+    <dimen name="text_12">12sp</dimen>
+    <dimen name="text_14">14sp</dimen>
+    <dimen name="text_16">16sp</dimen>
+    <dimen name="text_18">18sp</dimen>
+    <dimen name="text_20">20sp</dimen>
+    <dimen name="text_26">22sp</dimen>
+
+    <dimen name="line_divider">1dp</dimen>
+    <dimen name="status_icon">@dimen/space_large</dimen>
+
+    <!-- Login -->
+    <dimen name="logo_login">200dp</dimen>
+    <dimen name="app_bar_size">@dimen/space_extra</dimen>
+    <dimen name="avatar">56dp</dimen>
+
+    <!-- Custom -->
+    <dimen name="setting_btn">@dimen/space_extra</dimen>
+    <dimen name="close_fab_space">80dp</dimen>
+    <dimen name="medium_fab_space">136dp</dimen>
+    <dimen name="large_edit_text_height">150dp</dimen>
+    <dimen name="low_bottom_sheet">300dp</dimen>
+    <dimen name="medium_bottom_sheet">450dp</dimen>
+    <dimen name="high_bottom_sheet">600dp</dimen>
+
+    <!-- New Search -->
+    <dimen name="width_ava">160dp</dimen>
+    <dimen name="height_ava">90dp</dimen>
+
+</resources>

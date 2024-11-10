@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Genk News</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="HomeVn">Trang chủ</string>
+    <string name="latest">Mới nhất</string>
+    <string name="video">Video</string>
+    <string name="menu">Menu</string>
+    <string name="menuTitle">MENU</string>
+    <string name="latestUpper">MỚI NHẤT</string>
+    <string name="no_internet">Lỗi kết nối</string>
+    <string name="retry">Thử lại</string>
+    <string name="search">Tìm kiếm</string>
+    <string name="category">Chuyên mục</string>
+    <string name="back">Back</string>
+    <string name="search_title">TÌM KIẾM</string>
+    <string name="cancel">HỦY</string>
+    <string name="title">TITLE</string>
+    <string name="avatar_new_search">avatarNewSearch</string>
+    <string name="description">DESCRIPTION</string>
+    <string name="category_new_search">CATEGORY</string>
+    <string name="date_time">DATE TIME</string>
+    <string name="source">SOURCE</string>
+    <string name="related_news">RELATED NEWS</string>
+    <string name="app_name_avatar">APP_NAME_AVATAR</string>
+</resources>
