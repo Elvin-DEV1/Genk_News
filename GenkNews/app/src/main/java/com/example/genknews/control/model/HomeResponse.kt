@@ -90,17 +90,17 @@ data class DataCategoriesBox(
 )
 
 data class DontForget(
-    val Data: List<DataDontForget>,
-    val Settings: SettingsDontForget
+    val data: List<DataDontForget>,
+    val settings: SettingsDontForget
 )
 
 data class DataDontForget(
-    val Author: String,
-    val Avatar: String,
-    val AvatarPreload: String,
-    val DistributionDate: String,
-    val InitSapo: String,
-    val NewsId: String,
+    val author: String,
+    val avatar: String,
+    val avatarPreload: String,
+    val distributionDate: String,
+    val initSapo: String,
+    val newsId: String,
     val NewsType: Int,
     val Sapo: String,
     val SocialCount: Int,
