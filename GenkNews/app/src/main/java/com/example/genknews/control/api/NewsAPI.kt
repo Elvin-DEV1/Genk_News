@@ -1,17 +1,17 @@
 package com.example.genknews.control.api
 
-import com.example.genknews.control.model.ConfigResponse
-import com.example.genknews.control.model.HomeResponse
-import com.example.genknews.control.model.HotVideoResponse
-import com.example.genknews.control.model.MenuResponse
-import com.example.genknews.control.model.NewsResponse
-import com.example.genknews.control.model.NotifyResponse
-import com.example.genknews.control.model.SearchResponse
-import com.example.genknews.control.model.TagResponse
-import com.example.genknews.control.model.VideoDetailResponse
-import com.example.genknews.control.model.VideoZoneResponse
-import com.example.genknews.control.model.ZoneNewsResponse
-import com.example.genknews.control.model.ZoneResponse
+import com.example.genknews.common.entity.ConfigResponse
+import com.example.genknews.common.entity.HomeResponse
+import com.example.genknews.common.entity.HotVideoResponse
+import com.example.genknews.common.entity.MenuResponse
+import com.example.genknews.common.entity.NewsResponse
+import com.example.genknews.common.entity.NotifyResponse
+import com.example.genknews.common.entity.SearchResponse
+import com.example.genknews.common.entity.TagResponse
+import com.example.genknews.common.entity.VideoDetailResponse
+import com.example.genknews.common.entity.VideoZoneResponse
+import com.example.genknews.common.entity.ZoneNewsResponse
+import com.example.genknews.common.entity.ZoneResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Field
@@ -74,7 +74,6 @@ interface NewsAPI {
     suspend fun getVideoZones(
         @Field("secret_key") secretKey: String
     ): Response<VideoZoneResponse>
-
     @POST("app/zone")
     @FormUrlEncoded
     suspend fun getZoneNews(

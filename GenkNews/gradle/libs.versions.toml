@@ -14,6 +14,7 @@ hilt = "2.52"
 gson = "2.11.0"
 ok-http = "4.12.0"
 retrofit = "2.10.0"
+roomCommon = "2.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -38,6 +39,7 @@ okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "ok-ht
 okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "ok-http" }
 
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
