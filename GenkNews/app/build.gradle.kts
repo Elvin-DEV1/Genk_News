@@ -57,6 +57,7 @@ dependencies {
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.navigation.ui)
     implementation(libs.hilt.android)
+    implementation(libs.glide)
     kapt(libs.hilt.android.compiler)
 
     implementation(libs.retrofit)

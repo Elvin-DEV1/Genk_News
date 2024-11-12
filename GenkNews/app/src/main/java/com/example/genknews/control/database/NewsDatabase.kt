@@ -5,10 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.genknews.control.entity.NewsDB
+import com.example.genknews.control.entity.NewsLatestDB
 
 @Database(
-    entities = [NewsDB::class],
+    entities = [NewsLatestDB::class],
     version = 1
 )
 

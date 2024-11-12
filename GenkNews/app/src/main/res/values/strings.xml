@@ -17,10 +17,15 @@
     <string name="cancel">HỦY</string>
     <string name="title">TITLE</string>
     <string name="avatar_new_search">avatarNewSearch</string>
+    <string name="avatar_new_relation">avatarNewRelation</string>
     <string name="description">DESCRIPTION</string>
     <string name="category_new_search">CATEGORY</string>
     <string name="date_time">DATE TIME</string>
     <string name="source">SOURCE</string>
+    <string name="newsRelation">Tin liên quan</string>
     <string name="related_news">RELATED NEWS</string>
     <string name="app_name_avatar">APP_NAME_AVATAR</string>
+    <string name="addImage">addImage</string>
+    <string name="close_image">Close image</string>
+    <string name="theo">Theo</string>
 </resources>

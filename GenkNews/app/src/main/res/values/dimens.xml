@@ -38,6 +38,6 @@
 
     <!-- New Search -->
     <dimen name="width_ava">160dp</dimen>
-    <dimen name="height_ava">90dp</dimen>
+    <dimen name="height_ava">100dp</dimen>
 
 </resources>

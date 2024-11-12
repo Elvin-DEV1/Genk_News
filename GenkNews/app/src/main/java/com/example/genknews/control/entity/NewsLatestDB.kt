@@ -7,7 +7,7 @@ import androidx.room.TypeConverters
 import com.example.genknews.control.database.Converters
 
 @Entity(tableName = "news")
-data class NewsDB(
+data class NewsLatestDB(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "news_id")
     val newsId: Int = 0,

@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp">
+    android:padding="@dimen/space">
 
     <TextView
         android:id="@+id/articleTitle"
@@ -20,13 +20,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
     <ImageView
         android:id="@+id/articleImage"
-        android:layout_width="@dimen/width_ava"
-        android:layout_height="@dimen/height_ava"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/logo"
         android:layout_marginTop="@dimen/space_large"
         android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="16:9"
         app:layout_constraintStart_toStartOf="@id/articleTitle"
+        app:layout_constraintEnd_toEndOf="@id/guideline"
         app:layout_constraintTop_toBottomOf="@id/articleTitle"
         android:contentDescription="@string/avatar_new_search"/>
 
@@ -73,14 +83,26 @@
         app:layout_constraintBottom_toBottomOf="@id/articleCategory"/>
 
     <TextView
+        android:id="@+id/theo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space"
+        android:text="@string/theo"
+        android:fontFamily="@font/poppins"
+        android:textColor="@color/colorTextCategory"
+        app:layout_constraintStart_toStartOf="@id/articleImage"
+        app:layout_constraintTop_toBottomOf="@+id/articleImage" />
+
+    <TextView
         android:id="@+id/articleSource"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space"
+        android:layout_marginStart="@dimen/space_small"
         android:text="@string/source"
         android:fontFamily="@font/poppins"
         android:textColor="@color/colorTextCategory"
-        app:layout_constraintStart_toStartOf="@id/articleImage"
+        app:layout_constraintStart_toEndOf="@id/theo"
         app:layout_constraintTop_toBottomOf="@+id/articleImage" />
 
     <TextView
@@ -88,10 +110,32 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space"
-        android:text="@string/source"
+        android:text="@string/newsRelation"
         android:fontFamily="@font/poppins"
         android:textColor="@color/colorTextCategory"
         app:layout_constraintEnd_toEndOf="@id/articleDescription"
         app:layout_constraintTop_toBottomOf="@+id/articleImage" />
+
+    <ImageView
+        android:id="@+id/addImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/add"
+        android:layout_marginEnd="@dimen/space_small"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@id/articleRelation"
+        app:layout_constraintEnd_toStartOf="@id/articleRelation"
+        android:contentDescription="@string/addImage"/>
+
+    <ImageView
+        android:id="@+id/closeImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/close"
+        android:layout_marginEnd="@dimen/space_small"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/addImage"
+        app:layout_constraintStart_toStartOf="@id/addImage"
+        android:contentDescription="@string/close_image"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

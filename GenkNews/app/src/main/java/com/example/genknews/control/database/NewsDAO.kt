@@ -5,21 +5,21 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.genknews.control.entity.NewsDB
+import com.example.genknews.control.entity.NewsLatestDB
 
 @Dao
 interface NewsDAO {
     @Query("SELECT * FROM news")
-    fun getAllNews(): LiveData<List<NewsDB>>
+    suspend fun getAllNews(): LiveData<List<NewsLatestDB>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertNews(news: NewsDB)
+    suspend fun insertNews(news: NewsLatestDB)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAllNews(news: List<NewsDB>)
+    suspend fun insertAllNews(news: List<NewsLatestDB>)
 
     @Query("SELECT * FROM news WHERE news_id = :id")
-    suspend fun getNewsById(id: String): NewsDB?
+    suspend fun getNewsById(id: String): NewsLatestDB?
 
     @Query("DELETE FROM news")
     suspend fun deleteAllNews()

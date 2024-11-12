@@ -16,6 +16,7 @@ ok-http = "4.12.0"
 retrofit = "2.10.0"
 roomCommon = "2.6.1"
 roomKtx = "2.6.1"
+glide = "4.16.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -34,6 +35,8 @@ hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-comp
 
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+
+glide = {group = "com.github.bumptech.glide", name = "glide", version.ref = "glide"}
 
 okhttp-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "ok-http" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "ok-http" }
