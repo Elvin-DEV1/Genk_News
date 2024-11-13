@@ -1,7 +1,6 @@
-package com.example.genknews.control.database
+package com.example.genknews.control.database.relation
 
 import androidx.room.TypeConverter
-import com.example.genknews.control.entity.NewsLatestDB
 import com.example.genknews.control.entity.NewsRelation
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

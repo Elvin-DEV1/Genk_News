@@ -2,10 +2,10 @@ package com.example.genknews.control.repository
 
 import com.example.genknews.control.api.NewsAPI
 import com.example.genknews.control.api.RetrofitInstance
-import com.example.genknews.control.database.NewsDatabase
+import com.example.genknews.control.database.latest.NewsLatestDatabase
 import com.example.genknews.control.entity.NewsLatestDB
 
-class NewsRepository(val db: NewsDatabase) {
+class NewsLatestRepository(val db: NewsLatestDatabase) {
 
     suspend fun getHome(os: String, version: String)
     = RetrofitInstance.api.getHome(os = os, version = version)

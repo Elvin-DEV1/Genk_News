@@ -1,4 +1,4 @@
-package com.example.genknews.control.database
+package com.example.genknews.control.database.latest
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
@@ -8,7 +8,7 @@ import androidx.room.Query
 import com.example.genknews.control.entity.NewsLatestDB
 
 @Dao
-interface NewsDAO {
+interface NewsLatestDAO {
     @Query("SELECT * FROM news")
     suspend fun getAllNews(): LiveData<List<NewsLatestDB>>
 

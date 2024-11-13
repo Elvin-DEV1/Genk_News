@@ -1,0 +1,39 @@
+package com.example.genknews.control.database.latest
+
+import android.content.Context
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import com.example.genknews.control.database.relation.Converters
+import com.example.genknews.control.entity.NewsLatestDB
+
+@Database(
+    entities = [NewsLatestDB::class],
+    version = 1
+)
+
+@TypeConverters(Converters::class)
+abstract class NewsLatestDatabase : RoomDatabase() {
+
+    abstract fun getNewsDao() : NewsLatestDAO
+
+    companion object{
+        @Volatile
+        private var instance : NewsLatestDatabase? = null
+        private val LOCK = Any()
+
+        operator fun invoke(context: Context) = instance ?: synchronized(LOCK){
+            instance ?: createDatabase(context).also {
+                instance = it
+            }
+        }
+
+        private fun createDatabase(context: Context) =
+            Room.databaseBuilder(
+                context.applicationContext,
+                NewsLatestDatabase::class.java,
+                "news_latest.db"
+            ).build()
+    }
+}

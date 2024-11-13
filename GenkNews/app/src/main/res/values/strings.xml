@@ -8,6 +8,7 @@
     <string name="menu">Menu</string>
     <string name="menuTitle">MENU</string>
     <string name="latestUpper">MỚI NHẤT</string>
+    <string name="zoneName">ZONE NAME</string>
     <string name="no_internet">Lỗi kết nối</string>
     <string name="retry">Thử lại</string>
     <string name="search">Tìm kiếm</string>

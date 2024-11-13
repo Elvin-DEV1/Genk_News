@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import com.example.genknews.control.database.Converters
+import com.example.genknews.control.database.relation.Converters
 
 @Entity(tableName = "newsHome")
 data class NewsHomeDB(
