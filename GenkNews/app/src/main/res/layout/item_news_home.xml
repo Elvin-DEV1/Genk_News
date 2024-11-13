@@ -112,7 +112,7 @@
         android:layout_marginTop="@dimen/space"
         android:text="@string/newsRelation"
         android:fontFamily="@font/poppins"
-        android:textColor="@color/colorTextCategory"
+        android:textColor="@color/colorNewsRelation"
         app:layout_constraintEnd_toEndOf="@id/articleDescription"
         app:layout_constraintTop_toBottomOf="@+id/articleImage" />
 
@@ -122,7 +122,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/add"
         android:layout_marginEnd="@dimen/space_small"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@id/articleRelation"
         app:layout_constraintEnd_toStartOf="@id/articleRelation"
         android:contentDescription="@string/addImage"/>
@@ -133,9 +133,39 @@
         android:layout_height="wrap_content"
         android:src="@drawable/close"
         android:layout_marginEnd="@dimen/space_small"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@id/addImage"
         app:layout_constraintStart_toStartOf="@id/addImage"
         android:contentDescription="@string/close_image"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/NewsRelation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/theo"
+        android:background="@color/colorNewsRelationBackground">
+
+        <TextView
+            android:id="@+id/txtNewsRelation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space"
+            android:fontFamily="sans-serif"
+            android:text="@string/newsRelation"
+            android:textColor="@color/colorTextCategory"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerNewsRelation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space"
+            android:layout_marginBottom="@dimen/space"
+            app:layout_constraintTop_toBottomOf="@id/txtNewsRelation"
+            android:background="@color/colorNewsRelationBackground"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

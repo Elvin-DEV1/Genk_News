@@ -17,7 +17,7 @@
         android:contentDescription="@string/avatar_new_relation"/>
 
     <TextView
-        android:id="@+id/articleTitle"
+        android:id="@+id/articleDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/space_small"

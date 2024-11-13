@@ -16,7 +16,6 @@ class Logger @Inject constructor() {
         VERBOSE, DEBUG, INFO, WARNING, ERROR;
     }
 
-    private val isLogger: Boolean = BuildConfig.IS_LOG
     private var tag: String? = Logger::class.simpleName
     private val level: Type = Type.VERBOSE
     private val backupTag = "Logger"
@@ -34,7 +33,6 @@ class Logger @Inject constructor() {
      * Function - Private
      ********************************************************************** */
     private fun print(logType: Type = Type.VERBOSE, tag: String? = "", message: String = "") {
-        if (!isLogger) return
         if (message.isEmpty()) return
         if (logType.ordinal < level.ordinal) return
 

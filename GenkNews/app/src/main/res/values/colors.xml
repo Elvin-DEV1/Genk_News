@@ -9,4 +9,6 @@
     <color name="colorRecyclerView">#F1F1F1</color>
     <color name="colorTextCategory">#4E4E4E</color>
     <color name="backgroundSearch">#D4D4D4</color>
+    <color name="colorNewsRelation">#4B3EBF</color>
+    <color name="colorNewsRelationBackground">#FAFAFA</color>
 </resources>

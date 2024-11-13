@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.example.genknews.control.database.Converters
 
-@Entity(tableName = "news")
-data class NewsLatestDB(
+@Entity(tableName = "newsHome")
+data class NewsHomeDB(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val id: Int = 0,
@@ -22,10 +22,7 @@ data class NewsLatestDB(
     val distributionDate: String,
 
     @ColumnInfo(name = "news_id")
-    val newsId: Int = 0,
-
-    @ColumnInfo(name = "init_sapo")
-    val initSapo: String,
+    val newsId: String,
 
     @TypeConverters(Converters::class)
     @ColumnInfo(name = "news_relation")
@@ -33,6 +30,9 @@ data class NewsLatestDB(
 
     @ColumnInfo(name = "news_type")
     val newsType: Int,
+
+    @ColumnInfo(name = "order")
+    val order: Int,
 
     @ColumnInfo(name = "sapo")
     val sapo: String,
@@ -48,6 +48,12 @@ data class NewsLatestDB(
 
     @ColumnInfo(name = "sub_title")
     val subTitle: String,
+
+    @ColumnInfo(name = "thread_id")
+    val threadId: Int,
+
+    @ColumnInfo(name = "thread_name")
+    val threadName: String,
 
     @ColumnInfo(name = "title")
     val title: String,

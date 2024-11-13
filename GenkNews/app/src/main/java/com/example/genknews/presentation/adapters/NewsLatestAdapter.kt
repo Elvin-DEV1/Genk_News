@@ -3,26 +3,21 @@ package com.example.genknews.presentation.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.genknews.R
 import com.example.genknews.control.entity.NewsLatestDB
+import com.example.genknews.control.entity.NewsRelation
 import com.example.genknews.databinding.ItemNewsHomeBinding
 
-class NewsLatestAdapter : RecyclerView.Adapter<NewsLatestAdapter.NewsLatestViewHolder>() {
-    inner class NewsLatestViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
-    lateinit var newsImage: ImageView
-    lateinit var newsTitle: TextView
-    lateinit var newsDescription: TextView
-    lateinit var newsCategory: TextView
-    lateinit var newsDatetime: TextView
-    lateinit var newsSource: TextView
+class NewsLatestAdapter : RecyclerView.Adapter<NewsLatestAdapter.ViewHolder>() {
 
-    private val differCallback = object : DiffUtil.ItemCallback<NewsLatestDB>(){
+    /* **********************************************************************
+     * DiffUtil
+     ********************************************************************** */
+    private val differCallback = object : DiffUtil.ItemCallback<NewsLatestDB>() {
         override fun areItemsTheSame(oldItem: NewsLatestDB, newItem: NewsLatestDB): Boolean {
             return oldItem.url == newItem.url
         }
@@ -32,50 +27,94 @@ class NewsLatestAdapter : RecyclerView.Adapter<NewsLatestAdapter.NewsLatestViewH
         }
     }
 
-    val differ = AsyncListDiffer(this, differCallback)
+    private val differ = AsyncListDiffer(this, differCallback)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsLatestViewHolder {
-        return NewsLatestViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_news_home, parent, false)
+    fun submitList(list: List<NewsLatestDB>) {
+        differ.submitList(list)
+    }
+
+    /* **********************************************************************
+     * RecyclerView.Adapter Implementation
+     ********************************************************************** */
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding = ItemNewsHomeBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
         )
+        return ViewHolder(binding)
     }
 
-    override fun getItemCount(): Int {
-        return differ.currentList.size
-    }
+    override fun getItemCount(): Int = differ.currentList.size
 
-    private var onItemClickListener: ((NewsLatestDB) -> Unit)? = null
-
-    override fun onBindViewHolder(holder: NewsLatestViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val newsLatestDB = differ.currentList[position]
 
-        newsImage = holder.itemView.findViewById(R.id.articleImage)
-        newsTitle = holder.itemView.findViewById(R.id.articleTitle)
-        newsDescription = holder.itemView.findViewById(R.id.articleDescription)
-        newsCategory = holder.itemView.findViewById(R.id.articleCategory)
-        newsDatetime = holder.itemView.findViewById(R.id.articleDateTime)
-        newsSource = holder.itemView.findViewById(R.id.articleSource)
+        with(holder.binding) {
+            Glide.with(holder.itemView)
+                .load(newsLatestDB.avatar)
+                .into(articleImage)
 
-        holder.itemView.apply {
-            Glide.with(this).load(newsLatestDB.avatar).into(newsImage)
-            newsTitle.text = newsLatestDB.title
-            newsDescription.text = newsLatestDB.sapo
-            newsCategory.text = newsLatestDB.zoneName
-            newsDatetime.text = newsLatestDB.distributionDate
-            newsSource.text = newsLatestDB.source
+            articleTitle.text = newsLatestDB.title
+            articleDescription.text = newsLatestDB.sapo
+            articleCategory.text = newsLatestDB.zoneName
+            articleDateTime.text = newsLatestDB.distributionDate
+            articleSource.text = newsLatestDB.source
 
-            setOnClickListener {
-                onItemClickListener?.let {
-                    it(newsLatestDB)
+            root.setOnClickListener {
+                onItemClickListener?.invoke(newsLatestDB)
+            }
+
+            // Tin liên quan button click
+            articleRelation.setOnClickListener {
+                NewsRelation.visibility = if (NewsRelation.visibility == View.VISIBLE) {
+                    closeImage.visibility = View.INVISIBLE
+                    addImage.visibility = View.VISIBLE
+                    View.GONE
+                } else {
+                    closeImage.visibility = View.VISIBLE
+                    addImage.visibility = View.INVISIBLE
+                    View.VISIBLE
                 }
+            }
+
+            // Thiết lập RecyclerView tin liên quan nếu có
+            if (newsLatestDB.newsRelation.isNotEmpty()) {
+                val relatedAdapter = RelatedNewsAdapter()
+                recyclerNewsRelation.apply {
+                    layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                    adapter = relatedAdapter
+                }
+                relatedAdapter.submitList(newsLatestDB.newsRelation)
+
+                // Optional: Set click listener for related news items
+                relatedAdapter.setOnItemClickListener { relatedNews ->
+                    onRelatedNewsClickListener?.invoke(relatedNews)
+                }
+            } else {
+                // Hide the related news section if there are no related news
+                articleRelation.visibility = View.GONE
             }
         }
     }
 
-    fun setOnItemClickListener(listener: (NewsLatestDB) -> Unit){
+    /* **********************************************************************
+     * Click Listeners
+     ********************************************************************** */
+    private var onItemClickListener: ((NewsLatestDB) -> Unit)? = null
+    private var onRelatedNewsClickListener: ((NewsRelation) -> Unit)? = null
+
+    fun setOnItemClickListener(listener: (NewsLatestDB) -> Unit) {
         onItemClickListener = listener
     }
 
-    inner class ViewHolder(binding: ItemNewsHomeBinding) :
+    fun setOnRelatedNewsClickListener(listener: (NewsRelation) -> Unit) {
+        onRelatedNewsClickListener = listener
+    }
+
+    /* **********************************************************************
+     * ViewHolder
+     ********************************************************************** */
+    inner class ViewHolder(val binding: ItemNewsHomeBinding) :
         RecyclerView.ViewHolder(binding.root)
 }
