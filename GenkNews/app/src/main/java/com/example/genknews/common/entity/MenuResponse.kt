@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 data class MenuResponse(
     @SerializedName("categoriesBox")
     @Expose
-    val categoriesBox: List<CategoriesBox>
+    val categoriesBox: MutableList<CategoriesBox>
 ) {
     data class CategoriesBox(
         @SerializedName("Domain")

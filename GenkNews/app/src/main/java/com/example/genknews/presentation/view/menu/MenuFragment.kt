@@ -1,4 +1,4 @@
-package com.example.genknews.presentation.view.fragments
+package com.example.genknews.presentation.view.menu
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

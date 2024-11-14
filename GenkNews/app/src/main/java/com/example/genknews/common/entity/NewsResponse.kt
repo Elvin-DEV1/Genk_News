@@ -11,7 +11,7 @@ data class NewsResponse(
 
     @SerializedName("News")
     @Expose
-    val news: List<New>
+    val news: MutableList<New>
 ) {
     data class LastUpdated(
         @SerializedName("Data")

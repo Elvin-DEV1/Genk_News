@@ -12,13 +12,13 @@ class NewsSearchRepository(val db: NewsSearchDatabase) {
         NewsAPI.SearchRequest(keywords = keywords, pageIndex = pageIndex, pageSize = pageSize)
     )
 
-    suspend fun getAllNews() = db.getNewsDao().getAllNews()
+    suspend fun getAllNewsSearch() = db.getNewsDao().getAllNews()
 
-    suspend fun insertNews(news: NewsSearchDB) = db.getNewsDao().insertNews(news)
+    suspend fun insertNewsSearch(news: NewsSearchDB) = db.getNewsDao().insertNews(news)
 
-    suspend fun insertAllNews(news: List<NewsSearchDB>) = db.getNewsDao().insertAllNews(news)
+    suspend fun insertAllNewsSearch(news: List<NewsSearchDB>) = db.getNewsDao().insertAllNews(news)
 
-    suspend fun getNewsById(id: String): NewsSearchDB? = db.getNewsDao().getNewsById(id)
+    suspend fun getNewsSearchById(id: String): NewsSearchDB? = db.getNewsDao().getNewsById(id)
 
-    suspend fun deleteAllNews() = db.getNewsDao().deleteAllNews()
+    suspend fun deleteAllNewsSearch() = db.getNewsDao().deleteAllNews()
 }

@@ -1,10 +1,10 @@
-package com.example.genknews.presentation.view.fragments
+package com.example.genknews.presentation.view.latest
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.example.genknews.R
 
 // TODO: Rename parameter arguments, choose names that match

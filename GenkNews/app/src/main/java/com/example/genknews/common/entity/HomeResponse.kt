@@ -376,7 +376,7 @@ data class HomeResponse(
     data class HomeNewsPosition(
         @SerializedName("Data")
         @Expose
-        val data: List<Data>
+        val data: MutableList<Data>
     ) {
         data class Data(
             @SerializedName("Avatar")

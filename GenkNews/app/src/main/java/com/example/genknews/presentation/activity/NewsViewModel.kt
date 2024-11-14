@@ -1,4 +1,4 @@
-package com.example.genknews.presentation.view.activity
+package com.example.genknews.presentation.activity
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

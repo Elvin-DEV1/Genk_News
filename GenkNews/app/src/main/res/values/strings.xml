@@ -9,6 +9,7 @@
     <string name="menuTitle">MENU</string>
     <string name="latestUpper">MỚI NHẤT</string>
     <string name="zoneName">ZONE NAME</string>
+    <string name="categoryName">CATEGORY NAME</string>
     <string name="no_internet">Lỗi kết nối</string>
     <string name="retry">Thử lại</string>
     <string name="search">Tìm kiếm</string>
@@ -29,4 +30,5 @@
     <string name="addImage">addImage</string>
     <string name="close_image">Close image</string>
     <string name="theo">Theo</string>
+    <string name="image_zone">Image zone</string>
 </resources>

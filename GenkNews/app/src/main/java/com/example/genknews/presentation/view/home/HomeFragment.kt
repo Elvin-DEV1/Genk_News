@@ -1,4 +1,4 @@
-package com.example.genknews.presentation.view.fragments
+package com.example.genknews.presentation.view.home
 
 import android.os.Bundle
 import android.view.LayoutInflater

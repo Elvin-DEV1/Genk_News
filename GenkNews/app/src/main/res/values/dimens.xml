@@ -18,6 +18,7 @@
     <dimen name="text_18">18sp</dimen>
     <dimen name="text_20">20sp</dimen>
     <dimen name="text_26">22sp</dimen>
+    <dimen name="text_30">30sp</dimen>
 
     <dimen name="line_divider">1dp</dimen>
     <dimen name="status_icon">@dimen/space_large</dimen>
@@ -39,5 +40,9 @@
     <!-- New Search -->
     <dimen name="width_ava">160dp</dimen>
     <dimen name="height_ava">100dp</dimen>
+
+    <!-- Button Back -->
+    <dimen name="width_back">48dp</dimen>
+    <dimen name="height_back">48dp</dimen>
 
 </resources>

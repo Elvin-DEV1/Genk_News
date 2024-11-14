@@ -1,6 +1,5 @@
 package com.example.genknews.common.logger
 
-import android.content.Context
 import android.util.Log
 import com.example.genknews.BuildConfig
 import java.util.Calendar

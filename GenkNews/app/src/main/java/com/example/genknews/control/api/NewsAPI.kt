@@ -76,6 +76,7 @@ interface NewsAPI {
     suspend fun getVideoZones(
         @Field("secret_key") secretKey: String = API_KEY
     ): Response<VideoZoneResponse>
+
     @POST("app/zone")
     @FormUrlEncoded
     suspend fun getZoneNews(
