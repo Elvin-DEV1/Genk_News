@@ -7,11 +7,8 @@ import com.example.genknews.control.entity.NewsLatestDB
 
 class NewsLatestRepository(val db: NewsLatestDatabase) {
 
-    suspend fun getHome(os: String, version: String)
-    = RetrofitInstance.api.getHome(os = os, version = version)
-
-    suspend fun getLatestNews(pageIndex: Int, pageSize: Int)
-    = RetrofitInstance.api.getLatestNews(pageIndex = pageIndex, pageSize = pageSize)
+    suspend fun getLatestNews()
+    = RetrofitInstance.api.getLatestNews()
 
     suspend fun getMenu() = RetrofitInstance.api.getMenu()
 
@@ -26,9 +23,6 @@ class NewsLatestRepository(val db: NewsLatestDatabase) {
     = RetrofitInstance.api.getTag(pageIndex = pageIndex, id = id)
 
     suspend fun getVideoZones() = RetrofitInstance.api.getVideoZones()
-
-    suspend fun getZoneNews(pageIndex: Int, zoneId: String)
-    = RetrofitInstance.api.getZoneNews(pageIndex = pageIndex, zoneId = zoneId)
 
     suspend fun getHotVideos() = RetrofitInstance.api.getHotVideos()
 

@@ -7,9 +7,9 @@ import com.example.genknews.control.entity.NewsSearchDB
 
 class NewsSearchRepository(val db: NewsSearchDatabase) {
 
-    suspend fun search(keywords: String, pageIndex: String, pageSize: String)
+    suspend fun search(keywords: String)
             = RetrofitInstance.api.search(
-        NewsAPI.SearchRequest(keywords = keywords, pageIndex = pageIndex, pageSize = pageSize)
+        NewsAPI.SearchRequest(keywords = keywords)
     )
 
     suspend fun getAllNewsSearch() = db.getNewsDao().getAllNews()

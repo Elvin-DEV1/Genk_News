@@ -6,8 +6,8 @@ import com.example.genknews.control.entity.NewsCategoryDB
 
 class NewsCategoryRepository(val db: NewsCategoryDatabase) {
 
-    suspend fun getZoneNews(pageIndex: Int, zoneId: String)
-            = RetrofitInstance.api.getZoneNews(pageIndex = pageIndex, zoneId = zoneId)
+    suspend fun getZoneNews(zoneId: String)
+            = RetrofitInstance.api.getZoneNews(zoneId = zoneId)
 
     suspend fun getAllNewsZone() = db.getNewsDao().getAllNews()
 

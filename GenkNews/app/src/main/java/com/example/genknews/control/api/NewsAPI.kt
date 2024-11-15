@@ -24,8 +24,8 @@ import retrofit2.http.POST
 interface NewsAPI {
     @POST("app/home")
     suspend fun getHome(
-        @Header("os") os: String,
-        @Header("version") version: String,
+        @Header("os") os: String = "android",
+        @Header("version") version: String = "133",
         @Field("secret_key") secretKey: String = API_KEY
     ): Response<HomeResponse>
 
@@ -33,8 +33,8 @@ interface NewsAPI {
     @FormUrlEncoded
     suspend fun getLatestNews(
         @Field("secret_key") secretKey: String = API_KEY,
-        @Field("page_index") pageIndex: Int,
-        @Field("page-size") pageSize: Int
+        @Field("page_index") pageIndex: Int = 1,
+        @Field("page-size") pageSize: Int = 10
     ): Response<NewsResponse>
 
     @POST("app/menu")
@@ -81,7 +81,6 @@ interface NewsAPI {
     @FormUrlEncoded
     suspend fun getZoneNews(
         @Field("secret_key") secretKey: String = API_KEY,
-        @Field("page_index") pageIndex: Int,
         @Field("zone_id") zoneId: String
     ): Response<ZoneNewsResponse>
 
@@ -106,7 +105,7 @@ interface NewsAPI {
     data class SearchRequest(
         val keywords: String,
         val secretKey: String = API_KEY,
-        val pageIndex: String,
-        val pageSize: String
+        val pageIndex: String = "2",
+        val pageSize: String = "20"
     )
 }

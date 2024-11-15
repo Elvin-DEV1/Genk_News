@@ -40,6 +40,9 @@
         <action
             android:id="@+id/action_menuFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_menuFragment_to_categoryFragment"
+            app:destination="@id/categoryFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -47,6 +50,14 @@
         android:label="SearchFragment" >
         <action
             android:id="@+id/action_searchFragment_to_articleFragment"
+            app:destination="@id/articleFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="com.example.genknews.presentation.view.category.CategoryFragment"
+        android:label="CategoryFragment" >
+        <action
+            android:id="@+id/action_categoryFragment_to_articleFragment"
             app:destination="@id/articleFragment" />
     </fragment>
 </navigation>

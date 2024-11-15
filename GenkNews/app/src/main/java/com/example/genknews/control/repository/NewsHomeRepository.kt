@@ -6,8 +6,8 @@ import com.example.genknews.control.entity.NewsHomeDB
 
 class NewsHomeRepository(val db: NewsHomeDatabase) {
 
-    suspend fun getHome(os: String, version: String) =
-        RetrofitInstance.api.getHome(os = os, version = version)
+    suspend fun getHome() =
+        RetrofitInstance.api.getHome()
 
     suspend fun getAllNewsHome() = db.getNewsDao().getAllNews()
 
