@@ -66,7 +66,7 @@ class SearchViewModel(app: Application, val newsSearchRepository: NewsSearchRepo
         }
     }
 
-    fun getLatest(searchQuery: String) = viewModelScope.launch {
+    fun getSearch(searchQuery: String) = viewModelScope.launch {
         searchInternet(searchQuery)
     }
     

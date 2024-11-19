@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.genknews.control.entity.NewsSearchDB
+import com.example.genknews.common.entity.SearchNews
 import com.example.genknews.databinding.ItemNewsSearchBinding
 
 class NewsSearchAdapter : RecyclerView.Adapter<NewsSearchAdapter.ViewHolder>() {
@@ -14,17 +14,17 @@ class NewsSearchAdapter : RecyclerView.Adapter<NewsSearchAdapter.ViewHolder>() {
     /* **
      * DiffUtil
      ** */
-    private val differCallback = object : DiffUtil.ItemCallback<NewsSearchDB>() {
-        override fun areItemsTheSame(oldItem: NewsSearchDB, newItem: NewsSearchDB): Boolean {
+    private val differCallback = object : DiffUtil.ItemCallback<SearchNews>() {
+        override fun areItemsTheSame(oldItem: SearchNews, newItem: SearchNews): Boolean {
             return oldItem.url == newItem.url
         }
 
-        override fun areContentsTheSame(oldItem: NewsSearchDB, newItem: NewsSearchDB): Boolean {
+        override fun areContentsTheSame(oldItem: SearchNews, newItem: SearchNews): Boolean {
             return oldItem == newItem
         }
     }
 
-    private val differ = AsyncListDiffer(this, differCallback)
+    val differ = AsyncListDiffer(this, differCallback)
 
     /* **
      * RecyclerView.Adapter Implementation
@@ -62,9 +62,9 @@ class NewsSearchAdapter : RecyclerView.Adapter<NewsSearchAdapter.ViewHolder>() {
     /* **
      * Click Listener
      ** */
-    private var onItemClickListener: ((NewsSearchDB) -> Unit)? = null
+    private var onItemClickListener: ((SearchNews) -> Unit)? = null
 
-    fun setOnItemClickListener(listener: (NewsSearchDB) -> Unit) {
+    fun setOnItemClickListener(listener: (SearchNews) -> Unit) {
         onItemClickListener = listener
     }
 

@@ -3,6 +3,7 @@ package com.example.genknews.control.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity(tableName = "newsSearch")
 data class NewsSearchDB(
@@ -42,4 +43,4 @@ data class NewsSearchDB(
 
     @ColumnInfo(name = "zone_name")
     val zoneName: String
-)
+) : Serializable

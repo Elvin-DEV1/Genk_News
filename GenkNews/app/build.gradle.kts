@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt.android)
+    alias(libs.plugins.navigation.safe.args)
+    id("kotlin-parcelize")
     kotlin("kapt")
 }
 
@@ -50,6 +52,8 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -62,7 +66,6 @@ dependencies {
 
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
-
     implementation(platform(libs.okhttp.bom))
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)

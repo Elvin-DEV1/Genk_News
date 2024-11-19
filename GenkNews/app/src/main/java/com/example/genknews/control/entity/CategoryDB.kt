@@ -3,6 +3,7 @@ package com.example.genknews.control.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity(tableName = "category")
 data class CategoryDB(
@@ -24,4 +25,4 @@ data class CategoryDB(
 
     @ColumnInfo(name = "short_url")
     val shortURL: String
-)
+) : Serializable

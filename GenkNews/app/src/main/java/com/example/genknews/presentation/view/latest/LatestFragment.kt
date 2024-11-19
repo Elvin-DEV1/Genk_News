@@ -1,60 +1,158 @@
 package com.example.genknews.presentation.view.latest
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.widget.AbsListView
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.genknews.R
+import com.example.genknews.common.utils.Constants
+import com.example.genknews.common.utils.Resource
+import com.example.genknews.databinding.FragmentLatestBinding
+import com.example.genknews.presentation.activity.MainActivity
+import com.example.genknews.presentation.adapters.NewsLatestAdapter
+import com.example.genknews.presentation.view.home.HomeViewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class LatestFragment : Fragment(R.layout.fragment_latest) {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [LatestFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class LatestFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    lateinit var latestViewModel: HomeViewModel
+    private lateinit var newsLatestAdapter: NewsLatestAdapter
+    lateinit var imgLoading: ImageView
+    private lateinit var retryButton: Button
+    private lateinit var errorText: TextView
+    private lateinit var itemLatestError: CardView
+    lateinit var binding: FragmentLatestBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding = FragmentLatestBinding.bind(view)
+
+        itemLatestError = view.findViewById(R.id.itemLatestError)
+        val inflater =
+            requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val view: View = inflater.inflate(R.layout.item_error, null)
+
+        retryButton = view.findViewById(R.id.retryButton)
+        errorText = view.findViewById(R.id.errorText)
+
+        latestViewModel = (activity as MainActivity).homeViewModel
+        setupLatestRecycler()
+
+        newsLatestAdapter.setOnItemClickListener {
+            val bundle = Bundle().apply {
+                putSerializable("newsLatest", it)
+            }
+            findNavController().navigate(R.id.action_latestFragment_to_articleFragment, bundle)
+        }
+
+        latestViewModel.getLatest()
+
+        latestViewModel.latest.observe(viewLifecycleOwner) { response ->
+            Log.d("LatestFragment", "Response: $response")
+            when (response) {
+                is Resource.Success<*> -> {
+                    hideProgressBar()
+                    hideErrorMessage()
+                    response.data?.let { newsLatestResponse ->
+                        newsLatestAdapter.differ.submitList(newsLatestResponse.news?.toList())
+                        binding.recyclerLatest.setPadding(0, 0, 0, 0)
+                    }
+                }
+
+                is Resource.Error<*> -> {
+                    hideProgressBar()
+                    response.message?.let { message ->
+                        Toast.makeText(activity, "Error: $message", Toast.LENGTH_SHORT).show()
+                        showErrorMessage(message)
+                    }
+                }
+
+                is Resource.Loading<*> -> {
+                    showProgressBar()
+                }
+            }
+        }
+
+        retryButton.setOnClickListener {
+            latestViewModel.getLatest()
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_latest, container, false)
+    var isError = false
+    var isLoading = false
+    var isLastPage = false
+    var isScrolling = false
+
+    private fun hideProgressBar() {
+        binding.paginationProgressBar.visibility = View.INVISIBLE
+        isLoading = false
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment LatestFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            LatestFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    private fun showProgressBar() {
+        binding.paginationProgressBar.visibility = View.VISIBLE
+        isLoading = true
+    }
+
+    private fun hideErrorMessage() {
+        itemLatestError.visibility = View.INVISIBLE
+        isError = false
+    }
+
+    private fun showErrorMessage(message: String) {
+        itemLatestError.visibility = View.VISIBLE
+        errorText.text = message
+        isError = true
+    }
+
+    val scrollListener = object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+
+            val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+            val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+            val visibleItemCount = layoutManager.childCount
+            val totalItemCount = layoutManager.itemCount
+
+            val isNoErrors = !isError
+            val isNotLoadingAndNotLastPage = !isLoading && !isLastPage
+            val isAtLastItem = firstVisibleItemPosition + visibleItemCount >= totalItemCount
+            val isNotAtBeginning = firstVisibleItemPosition >= 0
+            val isTotalMoreThanVisible = totalItemCount >= Constants.QUERY_PAGE_SIZE
+            val shouldPaginate =
+                isNoErrors && isNotLoadingAndNotLastPage && isAtLastItem
+                        && isNotAtBeginning && isTotalMoreThanVisible && isScrolling
+            if (shouldPaginate) {
+                latestViewModel.getLatest()
+                isScrolling = false
             }
+        }
+
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+
+            if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                isScrolling = true
+            }
+        }
+    }
+
+    private fun setupLatestRecycler() {
+        newsLatestAdapter = NewsLatestAdapter()
+        binding.recyclerLatest.apply {
+            adapter = newsLatestAdapter
+            layoutManager = LinearLayoutManager(activity)
+            addOnScrollListener(this@LatestFragment.scrollListener)
+        }
     }
 }

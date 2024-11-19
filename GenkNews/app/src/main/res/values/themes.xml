@@ -8,7 +8,8 @@
 
     <style name="Theme.GenkNews" parent="Base.Theme.GenkNews" />
 
-    <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+    <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView">
         <item name="android:color">@color/colorPrimary</item>
+        <item name="labelVisibilityMode">labeled</item>
     </style>
 </resources>

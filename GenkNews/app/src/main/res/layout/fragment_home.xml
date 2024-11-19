@@ -16,6 +16,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
+            android:id="@+id/imgLoading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/app_name_avatar"
@@ -27,7 +28,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerHeadlines"
+        android:id="@+id/recyclerHome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -40,7 +41,7 @@
         app:layout_constraintTop_toBottomOf="@id/header" />
 
     <include
-        android:id="@+id/itemHeadlinesError"
+        android:id="@+id/itemHomeError"
         layout="@layout/item_error"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

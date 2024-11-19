@@ -1,18 +1,14 @@
 package com.example.genknews.control.api
 
-import androidx.room.Query
-import com.example.genknews.common.entity.ConfigResponse
-import com.example.genknews.common.entity.HomeResponse
+import com.example.genknews.common.entity.NewsHomeResponse
 import com.example.genknews.common.entity.HotVideoResponse
 import com.example.genknews.common.entity.MenuResponse
-import com.example.genknews.common.entity.NewsResponse
-import com.example.genknews.common.entity.NotifyResponse
+import com.example.genknews.common.entity.NewsLatestResponse
 import com.example.genknews.common.entity.SearchResponse
 import com.example.genknews.common.entity.TagResponse
 import com.example.genknews.common.entity.VideoDetailResponse
 import com.example.genknews.common.entity.VideoZoneResponse
-import com.example.genknews.common.entity.ZoneNewsResponse
-import com.example.genknews.common.entity.ZoneResponse
+import com.example.genknews.common.entity.CategoryNewsResponse
 import com.example.genknews.common.utils.Constants.Companion.API_KEY
 import retrofit2.Response
 import retrofit2.http.Body
@@ -23,45 +19,26 @@ import retrofit2.http.POST
 
 interface NewsAPI {
     @POST("app/home")
+    @FormUrlEncoded
     suspend fun getHome(
         @Header("os") os: String = "android",
         @Header("version") version: String = "133",
         @Field("secret_key") secretKey: String = API_KEY
-    ): Response<HomeResponse>
+    ): Response<NewsHomeResponse>
 
     @POST("app/lastest-news-paging")
     @FormUrlEncoded
     suspend fun getLatestNews(
         @Field("secret_key") secretKey: String = API_KEY,
-        @Field("page_index") pageIndex: Int = 1,
-        @Field("page-size") pageSize: Int = 10
-    ): Response<NewsResponse>
+        @Field("page_index") pageIndex: String = "2",
+        @Field("page-size") pageSize: String = "10"
+    ): Response<NewsLatestResponse>
 
     @POST("app/menu")
     @FormUrlEncoded
     suspend fun getMenu(
         @Field("secret_key") secretKey: String = API_KEY
     ): Response<MenuResponse>
-
-    @POST("app/config")
-    @FormUrlEncoded
-    suspend fun getConfig(
-        @Field("secret_key") secretKey: String = API_KEY
-    ): Response<ConfigResponse>
-
-    @POST("app/get-notify")
-    @FormUrlEncoded
-    suspend fun getNotify(
-        @Field("secret_key") secretKey: String = API_KEY,
-        @Field("device_id") deviceId: String,
-        @Field("user_id") userId: String
-    ): Response<NotifyResponse>
-
-    @POST("app/all-zone")
-    @FormUrlEncoded
-    suspend fun getAllZones(
-        @Field("secret_key") secretKey: String = API_KEY
-    ): Response<ZoneResponse>
 
     @POST("app/tag")
     @FormUrlEncoded
@@ -82,7 +59,7 @@ interface NewsAPI {
     suspend fun getZoneNews(
         @Field("secret_key") secretKey: String = API_KEY,
         @Field("zone_id") zoneId: String
-    ): Response<ZoneNewsResponse>
+    ): Response<CategoryNewsResponse>
 
     @POST("app/video/hot")
     @FormUrlEncoded
@@ -98,6 +75,7 @@ interface NewsAPI {
     ): Response<VideoDetailResponse>
 
     @POST("app/search")
+    @FormUrlEncoded
     suspend fun search(
         @Body searchRequest: SearchRequest
     ): Response<SearchResponse>

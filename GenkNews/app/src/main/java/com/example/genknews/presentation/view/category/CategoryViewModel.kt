@@ -7,7 +7,7 @@ import android.net.NetworkCapabilities
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.genknews.common.entity.ZoneNewsResponse
+import com.example.genknews.common.entity.CategoryNewsResponse
 import com.example.genknews.common.utils.Resource
 import com.example.genknews.control.repository.NewsCategoryRepository
 import kotlinx.coroutines.launch
@@ -15,11 +15,11 @@ import retrofit2.Response
 import java.io.IOException
 
 class CategoryViewModel(app: Application, val newsCategoryRepository: NewsCategoryRepository) : AndroidViewModel(app) {
-    val category: MutableLiveData<Resource<ZoneNewsResponse>> = MutableLiveData()
+    val category: MutableLiveData<Resource<CategoryNewsResponse>> = MutableLiveData()
     var categoryPage = 1
-    var categoryResponse: ZoneNewsResponse? = null
+    var categoryResponse: CategoryNewsResponse? = null
 
-    private fun handleZoneResponse(response: Response<ZoneNewsResponse>): Resource<ZoneNewsResponse> {
+    private fun handleZoneResponse(response: Response<CategoryNewsResponse>): Resource<CategoryNewsResponse> {
         if (response.isSuccessful){
             response.body()?.let { resultResponse ->
                 categoryPage++

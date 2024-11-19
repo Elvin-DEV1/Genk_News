@@ -7,26 +7,25 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.genknews.common.logger.Logger
-import com.example.genknews.control.entity.NewsRelation
+import com.example.genknews.common.entity.NewsHomeRelation
 import com.example.genknews.databinding.ItemNewsRelationBinding
 
-class RelatedNewsAdapter : RecyclerView.Adapter<RelatedNewsAdapter.ViewHolder>() {
+class RelatedNewsHomeAdapter : RecyclerView.Adapter<RelatedNewsHomeAdapter.ViewHolder>() {
 
     /* **********************************************************************
      * DiffUtil
      ********************************************************************** */
-    private val differCallback = object : DiffUtil.ItemCallback<NewsRelation>() {
+    private val differCallback = object : DiffUtil.ItemCallback<NewsHomeRelation>() {
         override fun areItemsTheSame(
-            oldItem: NewsRelation,
-            newItem: NewsRelation
+            oldItem: NewsHomeRelation,
+            newItem: NewsHomeRelation
         ): Boolean {
             return oldItem.url == newItem.url
         }
 
         override fun areContentsTheSame(
-            oldItem: NewsRelation,
-            newItem: NewsRelation
+            oldItem: NewsHomeRelation,
+            newItem: NewsHomeRelation
         ): Boolean {
             return oldItem == newItem
         }
@@ -34,8 +33,7 @@ class RelatedNewsAdapter : RecyclerView.Adapter<RelatedNewsAdapter.ViewHolder>()
 
     private val differ = AsyncListDiffer(this, differCallback)
 
-    // Function to submit list
-    fun submitList(list: List<NewsRelation>) {
+    fun submitList(list: List<NewsHomeRelation>) {
         differ.submitList(list)
     }
 
@@ -57,7 +55,7 @@ class RelatedNewsAdapter : RecyclerView.Adapter<RelatedNewsAdapter.ViewHolder>()
         val screenWidth = displayMetrics.widthPixels
 
         Log.i("", "Set item width to 80% of screen width")
-        binding.root.layoutParams.width = (screenWidth * 0.8).toInt()
+        binding.root.layoutParams.width = (screenWidth * 0.4).toInt()
 
         return ViewHolder(binding)
     }
@@ -83,9 +81,9 @@ class RelatedNewsAdapter : RecyclerView.Adapter<RelatedNewsAdapter.ViewHolder>()
     /* **********************************************************************
      * Click Listener
      ********************************************************************** */
-    private var onItemClickListener: ((NewsRelation) -> Unit)? = null
+    private var onItemClickListener: ((NewsHomeRelation) -> Unit)? = null
 
-    fun setOnItemClickListener(listener: (NewsRelation) -> Unit) {
+    fun setOnItemClickListener(listener: (NewsHomeRelation) -> Unit) {
         onItemClickListener = listener
     }
 

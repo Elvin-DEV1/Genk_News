@@ -8,113 +8,107 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.genknews.control.entity.NewsLatestDB
-import com.example.genknews.control.entity.NewsRelation
+import com.example.genknews.common.entity.NewsLatest
+import com.example.genknews.common.entity.NewsLatestRelation
 import com.example.genknews.databinding.ItemNewsHomeBinding
 
-class NewsLatestAdapter : RecyclerView.Adapter<NewsLatestAdapter.ViewHolder>() {
+class NewsLatestAdapter : RecyclerView.Adapter<NewsLatestAdapter.NewsViewHolder>() {
 
-    /* **********************************************************************
-     * DiffUtil
-     ********************************************************************** */
-    private val differCallback = object : DiffUtil.ItemCallback<NewsLatestDB>() {
-        override fun areItemsTheSame(oldItem: NewsLatestDB, newItem: NewsLatestDB): Boolean {
+    private val differCallback = object : DiffUtil.ItemCallback<NewsLatest>() {
+        override fun areItemsTheSame(
+            oldItem: NewsLatest,
+            newItem: NewsLatest
+        ): Boolean {
             return oldItem.url == newItem.url
         }
 
-        override fun areContentsTheSame(oldItem: NewsLatestDB, newItem: NewsLatestDB): Boolean {
+        override fun areContentsTheSame(
+            oldItem: NewsLatest,
+            newItem: NewsLatest
+        ): Boolean {
             return oldItem == newItem
         }
     }
 
-    private val differ = AsyncListDiffer(this, differCallback)
+    val differ = AsyncListDiffer(this, differCallback)
 
-    fun submitList(list: List<NewsLatestDB>) {
-        differ.submitList(list)
-    }
-
-    /* **********************************************************************
-     * RecyclerView.Adapter Implementation
-     ********************************************************************** */
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
         val binding = ItemNewsHomeBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
         )
-        return ViewHolder(binding)
+        return NewsViewHolder(binding)
     }
 
     override fun getItemCount(): Int = differ.currentList.size
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val newsLatestDB = differ.currentList[position]
+    override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
+        val newsItem = differ.currentList[position]
+        holder.bind(newsItem)
+    }
 
-        with(holder.binding) {
-            Glide.with(holder.itemView)
-                .load(newsLatestDB.avatar)
-                .into(articleImage)
+    fun submitList(list: List<NewsLatest>) {
+        differ.submitList(list)
+    }
 
-            articleTitle.text = newsLatestDB.title
-            articleDescription.text = newsLatestDB.sapo
-            articleCategory.text = newsLatestDB.zoneName
-            articleDateTime.text = newsLatestDB.distributionDate
-            articleSource.text = newsLatestDB.source
+    inner class NewsViewHolder(private val binding: ItemNewsHomeBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-            root.setOnClickListener {
-                onItemClickListener?.invoke(newsLatestDB)
-            }
+        fun bind(news: NewsLatest) {
+            with(binding) {
+                Glide.with(itemView)
+                    .load(news.avatar)
+                    .into(articleImage)
 
-            // Tin liên quan button click
-            articleRelation.setOnClickListener {
-                NewsRelation.visibility = if (NewsRelation.visibility == View.VISIBLE) {
-                    closeImage.visibility = View.INVISIBLE
-                    addImage.visibility = View.VISIBLE
-                    View.GONE
+                articleTitle.text = news.title
+                articleDescription.text = news.sapo
+                articleCategory.text = news.zoneName
+                articleDateTime.text = news.distributionDate
+                articleSource.text = news.source
+
+                root.setOnClickListener {
+                    onItemClickListener?.invoke(news)
+                }
+
+                articleRelation.setOnClickListener {
+                    NewsRelation.visibility = if (NewsRelation.visibility == View.VISIBLE) {
+                        closeImage.visibility = View.INVISIBLE
+                        addImage.visibility = View.VISIBLE
+                        View.GONE
+                    } else {
+                        closeImage.visibility = View.VISIBLE
+                        addImage.visibility = View.INVISIBLE
+                        View.VISIBLE
+                    }
+                }
+
+                if (news.newsRelation.isNotEmpty()) {
+                    val relatedAdapter = RelatedNewsLatestAdapter()
+                    recyclerNewsRelation.apply {
+                        layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                        adapter = relatedAdapter
+                    }
+                    relatedAdapter.submitList(news.newsRelation)
+
+                    relatedAdapter.setOnItemClickListener { relatedNews ->
+                        onRelatedNewsClickListener?.invoke(relatedNews)
+                    }
                 } else {
-                    closeImage.visibility = View.VISIBLE
-                    addImage.visibility = View.INVISIBLE
-                    View.VISIBLE
+                    articleRelation.visibility = View.GONE
                 }
-            }
-
-            // Thiết lập RecyclerView tin liên quan nếu có
-            if (newsLatestDB.newsRelation.isNotEmpty()) {
-                val relatedAdapter = RelatedNewsAdapter()
-                recyclerNewsRelation.apply {
-                    layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                    adapter = relatedAdapter
-                }
-                relatedAdapter.submitList(newsLatestDB.newsRelation)
-
-                // Optional: Set click listener for related news items
-                relatedAdapter.setOnItemClickListener { relatedNews ->
-                    onRelatedNewsClickListener?.invoke(relatedNews)
-                }
-            } else {
-                // Hide the related news section if there are no related news
-                articleRelation.visibility = View.GONE
             }
         }
     }
 
-    /* **********************************************************************
-     * Click Listeners
-     ********************************************************************** */
-    private var onItemClickListener: ((NewsLatestDB) -> Unit)? = null
-    private var onRelatedNewsClickListener: ((NewsRelation) -> Unit)? = null
+    private var onItemClickListener: ((NewsLatest) -> Unit)? = null
+    private var onRelatedNewsClickListener: ((NewsLatestRelation) -> Unit)? = null
 
-    fun setOnItemClickListener(listener: (NewsLatestDB) -> Unit) {
+    fun setOnItemClickListener(listener: (NewsLatest) -> Unit) {
         onItemClickListener = listener
     }
 
-    fun setOnRelatedNewsClickListener(listener: (NewsRelation) -> Unit) {
+    fun setOnRelatedNewsClickListener(listener: (NewsLatestRelation) -> Unit) {
         onRelatedNewsClickListener = listener
     }
-
-    /* **********************************************************************
-     * ViewHolder
-     ********************************************************************** */
-    inner class ViewHolder(val binding: ItemNewsHomeBinding) :
-        RecyclerView.ViewHolder(binding.root)
 }

@@ -7,7 +7,7 @@ import android.net.NetworkCapabilities
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.genknews.common.entity.NewsResponse
+import com.example.genknews.common.entity.NewsLatestResponse
 import com.example.genknews.common.utils.Resource
 import com.example.genknews.control.repository.NewsLatestRepository
 import kotlinx.coroutines.launch
@@ -15,11 +15,11 @@ import retrofit2.Response
 import java.io.IOException
 
 class LatestViewModel(app: Application, val newsLatestRepository: NewsLatestRepository) : AndroidViewModel(app) {
-    val latest: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
+    val latest: MutableLiveData<Resource<NewsLatestResponse>> = MutableLiveData()
     var latestPage = 1
-    var latestResponse: NewsResponse? = null
+    var latestResponse: NewsLatestResponse? = null
 
-    private fun handleLatestResponse(response: Response<NewsResponse>): Resource<NewsResponse> {
+    private fun handleLatestResponse(response: Response<NewsLatestResponse>): Resource<NewsLatestResponse> {
         if (response.isSuccessful){
             response.body()?.let { resultResponse ->
                 latestPage++

@@ -3,8 +3,7 @@ package com.example.genknews.control.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import com.example.genknews.control.database.relation.Converters
+import java.io.Serializable
 
 @Entity(tableName = "newsZone")
 data class NewsCategoryDB(
@@ -27,7 +26,6 @@ data class NewsCategoryDB(
     @ColumnInfo(name = "news_id")
     val newsId: String,
 
-    @TypeConverters(Converters::class)
     @ColumnInfo(name = "news_relation")
     val newsRelation: List<NewsRelation>,
 
@@ -75,4 +73,4 @@ data class NewsCategoryDB(
 
     @ColumnInfo(name = "zone_short_url")
     val zoneShortURL: String
-)
+) : Serializable

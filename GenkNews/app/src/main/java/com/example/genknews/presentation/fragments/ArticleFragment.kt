@@ -1,30 +1,32 @@
 package com.example.genknews.presentation.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.webkit.WebViewClient
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
 import com.example.genknews.R
+import com.example.genknews.databinding.FragmentArticleBinding
+import com.example.genknews.presentation.activity.MainActivity
+import com.example.genknews.presentation.view.home.HomeViewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class ArticleFragment : Fragment(R.layout.fragment_article) {
+    lateinit var newsViewModel: HomeViewModel
+    val args: ArticleFragmentArgs by navArgs()
+    lateinit var binding: FragmentArticleBinding
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ArticleFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class ArticleFragment : Fragment() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding = FragmentArticleBinding.bind(view)
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_article, container, false)
+        newsViewModel = (activity as MainActivity).homeViewModel
+        val news = args.news
+
+        binding.webView.apply {
+            webViewClient = WebViewClient()
+            news.url?.let {
+                loadUrl(it)
+            }
+        }
     }
-
 }

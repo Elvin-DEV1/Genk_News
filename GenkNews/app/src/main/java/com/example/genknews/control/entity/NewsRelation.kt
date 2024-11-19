@@ -1,5 +1,7 @@
 package com.example.genknews.control.entity
 
+import java.io.Serializable
+
 data class NewsRelation(
     val author: String,
     val avatar: String,
@@ -19,4 +21,4 @@ data class NewsRelation(
     val type: Int,
     val url: String,
     val zoneId: Int
-)
+) : Serializable
