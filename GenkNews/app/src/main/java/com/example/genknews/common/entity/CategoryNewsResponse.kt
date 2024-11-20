@@ -12,7 +12,7 @@ data class CategoryNewsResponse(
     @SerializedName("News")
     @Expose
     val news: MutableList<NewsCategory>
-) {
+) : Serializable {
     data class LastUpdated(
         @SerializedName("Data")
         @Expose

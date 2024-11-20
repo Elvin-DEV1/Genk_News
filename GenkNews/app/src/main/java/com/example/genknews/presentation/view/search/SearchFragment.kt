@@ -43,6 +43,13 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSearchBinding.bind(view)
 
+        arguments?.getString("search_query")?.let { query ->
+            binding.searchEdit.setText(query)
+            if (query.isNotEmpty()) {
+                searchViewModel.getSearch(query)
+            }
+        }
+
         itemSearchError = view.findViewById(R.id.itemHomeError)
         val inflater =
             requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater

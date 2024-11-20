@@ -214,7 +214,7 @@ class HomeViewModel(app: Application,
         }
     }
 
-    fun getZone(zoneId: String) = viewModelScope.launch {
+    fun getNewsCategory(zoneId: String) = viewModelScope.launch {
         zoneInternet(zoneId)
     }
 

@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.AbsListView
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
@@ -26,7 +25,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     lateinit var homeViewModel: HomeViewModel
     private lateinit var newsHomeAdapter: NewsHomeAdapter
-    lateinit var imgLoading: ImageView
     private lateinit var retryButton: Button
     private lateinit var errorText: TextView
     private lateinit var itemHomeError: CardView
@@ -112,7 +110,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         isError = true
     }
 
-    val scrollListener = object : RecyclerView.OnScrollListener() {
+    private val scrollListener = object : RecyclerView.OnScrollListener() {
 
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)

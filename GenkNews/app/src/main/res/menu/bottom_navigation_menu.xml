@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/home"
+        android:id="@+id/homeFragment"
         android:title="@string/HomeVn"
         android:icon="@drawable/home"/>
 
     <item
-        android:id="@+id/latest"
+        android:id="@+id/latestFragment"
         android:title="@string/latest"
         android:icon="@drawable/latest_new"/>
 
     <item
-        android:id="@+id/video"
+        android:id="@+id/videoFragment"
         android:title="@string/video"
         android:icon="@drawable/video"/>
 
     <item
-        android:id="@+id/menu"
+        android:id="@+id/menuFragment"
         android:title="@string/menu"
         android:icon="@drawable/menu"/>
 
