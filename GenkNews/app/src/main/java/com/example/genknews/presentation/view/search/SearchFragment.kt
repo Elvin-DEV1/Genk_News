@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.AbsListView
 import android.widget.Button
-import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
@@ -36,12 +35,25 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     lateinit var newsAdapter: NewsSearchAdapter
     lateinit var retryButton: Button
     lateinit var errorText: TextView
+    private lateinit var backButton: ImageButton
     lateinit var itemSearchError: CardView
     lateinit var binding: FragmentSearchBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSearchBinding.bind(view)
+
+        itemSearchError = view.findViewById(R.id.itemSearchError)
+        val inflater =
+            requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val view: View = inflater.inflate(R.layout.item_error, null)
+
+        retryButton = view.findViewById(R.id.retryButton)
+        errorText = view.findViewById(R.id.errorText)
+        backButton = binding.btnBack
+
+        searchViewModel = (activity as MainActivity).homeViewModel
+        setupSearchRecycler()
 
         arguments?.getString("search_query")?.let { query ->
             binding.searchEdit.setText(query)
@@ -50,20 +62,9 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             }
         }
 
-        itemSearchError = view.findViewById(R.id.itemHomeError)
-        val inflater =
-            requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val view: View = inflater.inflate(R.layout.item_error, null)
-
-        retryButton = view.findViewById(R.id.retryButton)
-        errorText = view.findViewById(R.id.errorText)
-
-        searchViewModel = (activity as MainActivity).homeViewModel
-        setupSearchRecycler()
-
         newsAdapter.setOnItemClickListener {
             val bundle = Bundle().apply {
-                putSerializable("newsHome", it)
+                putString("url", it.url)
             }
             findNavController().navigate(R.id.action_searchFragment_to_articleFragment, bundle)
         }
@@ -87,12 +88,9 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                     hideProgressBar()
                     hideErrorMessage()
                     response.data?.let {newsSearchResponse ->
-                        newsAdapter.differ.submitList(newsSearchResponse.news.toList())
-                        val totalPage = Constants.QUERY_PAGE_SIZE + 2
-                        isLastPage = searchViewModel.searchPage == totalPage
-                        if (isLastPage){
-                            binding.rvSearchResults.setPadding(0, 0, 0 ,0 )
-                        }
+                        newsAdapter.differ.submitList(
+                            newsSearchResponse.news.toList().distinctBy { it.newsId })
+                        binding.rvSearchResults.setPadding(0, 0, 0, 0)
                     }
                 }
                 is Resource.Error<*> -> {
@@ -113,6 +111,10 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             } else {
                 hideErrorMessage()
             }
+        }
+
+        backButton.setOnClickListener {
+            findNavController().navigateUp()
         }
     }
 

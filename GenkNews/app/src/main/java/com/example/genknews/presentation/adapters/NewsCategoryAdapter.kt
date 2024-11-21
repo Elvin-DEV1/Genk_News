@@ -97,7 +97,8 @@ class NewsCategoryAdapter : RecyclerView.Adapter<NewsCategoryAdapter.NewsViewHol
                         onRelatedNewsClickListener?.invoke(relatedNews)
                     }
                 } else {
-                    articleRelation.visibility = View.GONE
+                    txtNewsRelation.visibility = View.GONE
+                    recyclerNewsRelation.visibility = View.GONE
                 }
             }
         }

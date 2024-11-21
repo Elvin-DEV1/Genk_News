@@ -50,7 +50,14 @@ class LatestFragment : Fragment(R.layout.fragment_latest) {
 
         newsLatestAdapter.setOnItemClickListener {
             val bundle = Bundle().apply {
-                putSerializable("newsLatest", it)
+                putString("url", it.url)
+            }
+            findNavController().navigate(R.id.action_latestFragment_to_articleFragment, bundle)
+        }
+
+        newsLatestAdapter.setOnRelatedNewsClickListener {
+            val bundle = Bundle().apply {
+                putString("url", it.url)
             }
             findNavController().navigate(R.id.action_latestFragment_to_articleFragment, bundle)
         }
@@ -64,7 +71,8 @@ class LatestFragment : Fragment(R.layout.fragment_latest) {
                     hideProgressBar()
                     hideErrorMessage()
                     response.data?.let { newsLatestResponse ->
-                        newsLatestAdapter.differ.submitList(newsLatestResponse.news?.toList())
+                        newsLatestAdapter.differ.submitList(
+                            newsLatestResponse.news.toList().distinctBy { it.newsId })
                         binding.recyclerLatest.setPadding(0, 0, 0, 0)
                     }
                 }

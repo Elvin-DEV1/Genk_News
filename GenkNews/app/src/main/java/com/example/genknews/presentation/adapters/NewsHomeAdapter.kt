@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.genknews.common.entity.NewsHome
+import com.example.genknews.common.entity.NewsHomeRelation
+import com.example.genknews.common.entity.NewsLatestRelation
 import com.example.genknews.databinding.ItemHeadNewsBinding
 import com.example.genknews.databinding.ItemNewsHomeBinding
 
@@ -116,6 +118,13 @@ class NewsHomeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         adapter = relatedAdapter
                     }
                     relatedAdapter.submitList(news.newsHomeRelation)
+
+                    relatedAdapter.setOnItemClickListener { relatedNews ->
+                        onRelatedNewsClickListener?.invoke(relatedNews)
+                    }
+                }else{
+                    txtNewsRelation.visibility = View.GONE
+                    recyclerNewsRelation.visibility = View.GONE
                 }
             }
         }
@@ -140,6 +149,10 @@ class NewsHomeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     onItemClickListener?.invoke(news)
                 }
 
+                root.setOnClickListener {
+                    onRelatedNewsClickListener?.invoke(news.newsHomeRelation.get(position))
+                }
+
                 articleRelation.setOnClickListener {
                     NewsRelation.visibility = if (NewsRelation.visibility == View.VISIBLE) {
                         closeImage.visibility = View.INVISIBLE
@@ -159,14 +172,26 @@ class NewsHomeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         adapter = relatedAdapter
                     }
                     relatedAdapter.submitList(news.newsHomeRelation)
+
+                    relatedAdapter.setOnItemClickListener { relatedNews ->
+                        onRelatedNewsClickListener?.invoke(relatedNews)
+                    }
+                }else{
+                    txtNewsRelation.visibility = View.GONE
+                    recyclerNewsRelation.visibility = View.GONE
                 }
             }
         }
     }
 
     private var onItemClickListener: ((NewsHome) -> Unit)? = null
+    private var onRelatedNewsClickListener: ((NewsHomeRelation) -> Unit)? = null
 
     fun setOnItemClickListener(listener: (NewsHome) -> Unit) {
         onItemClickListener = listener
+    }
+
+    fun setOnRelatedNewsClickListener(listener: (NewsHomeRelation) -> Unit) {
+        onRelatedNewsClickListener = listener
     }
 }

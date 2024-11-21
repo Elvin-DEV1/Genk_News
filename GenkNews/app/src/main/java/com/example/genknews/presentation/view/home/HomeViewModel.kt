@@ -122,7 +122,6 @@ class HomeViewModel(app: Application,
         if (response.isSuccessful){
             response.body()?.let { resultResponse ->
                 Log.d("HomeViewModel", "Latest Response body: $resultResponse")
-
                 if (latestResponse?.news == null){
                     latestResponse = resultResponse
                 }else{
@@ -177,13 +176,12 @@ class HomeViewModel(app: Application,
      Category
      ********************************************************************** */
     val category: MutableLiveData<Resource<CategoryNewsResponse>> = MutableLiveData()
-    var categoryPage = 1
     var categoryResponse: CategoryNewsResponse? = null
 
     private fun handleZoneResponse(response: Response<CategoryNewsResponse>): Resource<CategoryNewsResponse> {
         if (response.isSuccessful){
             response.body()?.let { resultResponse ->
-                categoryPage++
+                Log.d("HomeViewModel", "Latest Response body: $resultResponse")
                 if (categoryResponse?.news  == null){
                     categoryResponse = resultResponse
                 }else{
@@ -194,6 +192,7 @@ class HomeViewModel(app: Application,
                 return  Resource.Success(categoryResponse ?: resultResponse)
             }
         }
+        Log.e("HomeViewModel", "Category Response not successful: ${response.errorBody()?.string()}")
         return Resource.Error(response.body(), response.message())
     }
 
@@ -201,34 +200,46 @@ class HomeViewModel(app: Application,
         category.postValue(Resource.Loading())
         try {
             if (internetConnection(this.getApplication())) {
-                val response = newsCategoryRepository.getZoneNews(zoneId)
-                category.postValue(handleZoneResponse(response))
+                try {
+                    val response = newsCategoryRepository.getZoneNews(zoneId)
+                    category.postValue(handleZoneResponse(response))
+                } catch (e: Exception) {
+                    Log.e("HomeViewModel", "Error fetching category data", e)
+                    category.postValue(Resource.Error(categoryResponse, e.message ?: "An error occurred"))
+                }
             } else {
-                category.postValue(Resource.Error(categoryResponse, "No internet"))
+                category.postValue(Resource.Error(categoryResponse, "No internet connection"))
             }
         } catch (t: Throwable) {
             when (t) {
-                is java.io.IOException -> category.postValue(Resource.Error(categoryResponse, "Unable to connect"))
-                else -> category.postValue(Resource.Error(categoryResponse, "No signal"))
+                is IOException -> category.postValue(Resource.Error(categoryResponse, "Network error: Unable to connect"))
+                else -> {
+                    Log.e("HomeViewModel", "Unknown error in category", t)
+                    category.postValue(Resource.Error(categoryResponse, "Unknown error occurred: ${t.message}"))
+                }
             }
         }
     }
 
     fun getNewsCategory(zoneId: String) = viewModelScope.launch {
-        zoneInternet(zoneId)
+        Log.d("HomeViewModel", "Starting getNewsCategory()")
+        try {
+            zoneInternet(zoneId)
+        } catch (e: Exception) {
+            Log.e("HomeViewModel", "Error in getNewsCategory()", e)
+            category.postValue(Resource.Error(categoryResponse, "Failed to fetch category data: ${e.message}"))
+        }
     }
 
     /* **********************************************************************
      Menu
      ********************************************************************** */
     val menu: MutableLiveData<Resource<MenuResponse>> = MutableLiveData()
-    var menuPage = 1
     var menuResponse: MenuResponse? = null
 
     private fun handleCategoryResponse(response: Response<MenuResponse>): Resource<MenuResponse> {
         if (response.isSuccessful) {
             response.body()?.let { resultResponse ->
-                menuPage++
                 if (menuResponse?.categoriesBox == null) {
                     menuResponse = resultResponse
                 } else {
@@ -246,34 +257,46 @@ class HomeViewModel(app: Application,
         menu.postValue(Resource.Loading())
         try {
             if (internetConnection(this.getApplication())) {
-                val response = categoryRepository.getMenu()
-                menu.postValue(handleCategoryResponse(response))
+                try {
+                    val response = categoryRepository.getMenu()
+                    menu.postValue(handleCategoryResponse(response))
+                } catch (e: Exception) {
+                    Log.e("HomeViewModel", "Error fetching menu data", e)
+                    menu.postValue(Resource.Error(menuResponse, e.message ?: "An error occurred"))
+                }
             } else {
-                menu.postValue(Resource.Error(menuResponse, "No internet"))
+                menu.postValue(Resource.Error(menuResponse, "No internet connection"))
             }
         } catch (t: Throwable) {
             when (t) {
-                is IOException -> menu.postValue(Resource.Error(menuResponse, "Unable to connect"))
-                else -> menu.postValue(Resource.Error(menuResponse, "No signal"))
+                is IOException -> menu.postValue(Resource.Error(menuResponse, "Network error: Unable to connect"))
+                else -> {
+                    Log.e("HomeViewModel", "Unknown error in menu", t)
+                    menu.postValue(Resource.Error(menuResponse, "Unknown error occurred: ${t.message}"))
+                }
             }
         }
     }
 
     fun getCategory() = viewModelScope.launch {
-        categoryInternet()
+        Log.d("HomeViewModel", "Starting getCategory()")
+        try {
+            categoryInternet()
+        } catch (e: Exception) {
+            Log.e("HomeViewModel", "Error in getCategory()", e)
+            menu.postValue(Resource.Error(menuResponse, "Failed to fetch menu data: ${e.message}"))
+        }
     }
 
     /* **********************************************************************
      Search
      ********************************************************************** */
     val search: MutableLiveData<Resource<SearchResponse>> = MutableLiveData()
-    var searchPage = 1
     var searchResponse: SearchResponse? = null
 
     private fun handleSearchResponse(response: Response<SearchResponse>): Resource<SearchResponse>{
         if (response.isSuccessful){
             response.body()?.let { resultResponse ->
-                searchPage++
                 if (searchResponse?.news  == null){
                     searchResponse = resultResponse
                 }else{
@@ -291,20 +314,34 @@ class HomeViewModel(app: Application,
         search.postValue(Resource.Loading())
         try {
             if (internetConnection(this.getApplication())) {
-                val response = newsSearchRepository.search(searchQuery)
-                search.postValue(handleSearchResponse(response))
+                try {
+                    val response = newsSearchRepository.search(searchQuery)
+                    search.postValue(handleSearchResponse(response))
+                } catch (e: Exception) {
+                    Log.e("HomeViewModel", "Error fetching search data", e)
+                    search.postValue(Resource.Error(searchResponse, e.message ?: "An error occurred"))
+                }
             } else {
-                search.postValue(Resource.Error(searchResponse, "No internet"))
+                search.postValue(Resource.Error(searchResponse, "No internet connection"))
             }
         } catch (t: Throwable) {
             when (t) {
-                is java.io.IOException -> search.postValue(Resource.Error(searchResponse, "Unable to connect"))
-                else -> search.postValue(Resource.Error(searchResponse, "No signal"))
+                is IOException -> search.postValue(Resource.Error(searchResponse, "Network error: Unable to connect"))
+                else -> {
+                    Log.e("HomeViewModel", "Unknown error in search", t)
+                    search.postValue(Resource.Error(searchResponse, "Unknown error occurred: ${t.message}"))
+                }
             }
         }
     }
 
     fun getSearch(searchQuery: String) = viewModelScope.launch {
-        searchInternet(searchQuery)
+        Log.d("HomeViewModel", "Starting getSearch()")
+        try {
+            searchInternet(searchQuery)
+        } catch (e: Exception) {
+            Log.e("HomeViewModel", "Error in getSearch()", e)
+            search.postValue(Resource.Error(searchResponse, "Failed to fetch search data: ${e.message}"))
+        }
     }
 }

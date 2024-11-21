@@ -8,11 +8,11 @@
     <fragment
         android:id="@+id/articleFragment"
         android:name="com.example.genknews.presentation.fragments.ArticleFragment"
-        android:label="ArticleFragment">
+        android:label="ArticleFragment"
+        tools:layout="@layout/fragment_article">
         <argument
             android:name="news"
-            app:argType="com.example.genknews.common.entity.NewsHome" />
-
+            app:argType="java.io.Serializable" />
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
@@ -26,7 +26,8 @@
     <fragment
         android:id="@+id/latestFragment"
         android:name="com.example.genknews.presentation.view.latest.LatestFragment"
-        android:label="LatestFragment" >
+        android:label="LatestFragment"
+        tools:layout="@layout/fragment_latest">
         <action
             android:id="@+id/action_latestFragment_to_articleFragment"
             app:destination="@id/articleFragment" />
@@ -39,7 +40,8 @@
     <fragment
         android:id="@+id/menuFragment"
         android:name="com.example.genknews.presentation.view.menu.MenuFragment"
-        android:label="MenuFragment" >
+        android:label="MenuFragment"
+        tools:layout="@layout/fragment_menu">
         <action
             android:id="@+id/action_menuFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
@@ -50,7 +52,8 @@
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.genknews.presentation.view.search.SearchFragment"
-        android:label="SearchFragment" >
+        android:label="SearchFragment"
+        tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_searchFragment_to_articleFragment"
             app:destination="@id/articleFragment" />
@@ -58,7 +61,8 @@
     <fragment
         android:id="@+id/categoryFragment"
         android:name="com.example.genknews.presentation.view.category.CategoryFragment"
-        android:label="CategoryFragment" >
+        android:label="CategoryFragment"
+        tools:layout="@layout/fragment_category">
         <action
             android:id="@+id/action_categoryFragment_to_articleFragment"
             app:destination="@id/articleFragment" />

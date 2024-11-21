@@ -41,10 +41,8 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentCategoryBinding.bind(view)
 
-        // Get category from arguments
         category = arguments?.getSerializable("category") as Category
 
-        // Setup error view
         itemCategoryError = view.findViewById(R.id.itemCategoryError)
         val inflater =
             requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -54,17 +52,14 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
         errorText = errorView.findViewById(R.id.errorText)
         backButton = view.findViewById(R.id.btnBack)
 
-        // Set category title
         binding.tvCategoryName.text = category.name
 
-        // Initialize ViewModel and RecyclerView
         categoryViewModel = (activity as MainActivity).homeViewModel
         setupCategoryRecycler()
 
-        // Handle item click
         newsCategoryAdapter.setOnItemClickListener {
             val bundle = Bundle().apply {
-                putSerializable("newsCategory", it)
+                putString("url", it.url)
             }
             findNavController().navigate(R.id.action_categoryFragment_to_articleFragment, bundle)
         }
@@ -78,7 +73,7 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
                     hideProgressBar()
                     hideErrorMessage()
                     response.data?.let { newsCategoryResponse ->
-                        newsCategoryAdapter.differ.submitList(newsCategoryResponse.news)
+                        newsCategoryAdapter.differ.submitList(newsCategoryResponse.news.distinctBy { it.newsId })
                         binding.recyclerCategory.setPadding(0, 0, 0, 0)
                     }
                 }

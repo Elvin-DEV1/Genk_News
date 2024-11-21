@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.AbsListView
 import android.widget.Button
 import android.widget.EditText
@@ -33,6 +34,7 @@ class MenuFragment : Fragment(R.layout.fragment_menu) {
     lateinit var searchEdit: EditText
     private lateinit var itemMenuError: CardView
     lateinit var binding: FragmentMenuBinding
+    private var lastSearchQuery = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -50,15 +52,22 @@ class MenuFragment : Fragment(R.layout.fragment_menu) {
         menuViewModel = (activity as MainActivity).homeViewModel
         setupMenuRecycler()
 
-        binding.searchEdit.setOnClickListener {
-            navigateToSearch(searchEdit.toString())
-        }
-
         binding.searchEdit.addTextChangedListener { editable ->
             editable?.let {
-                if (editable.toString().isNotEmpty()) {
-                    navigateToSearch(editable.toString())
+                val currentQuery = it.toString()
+                if (currentQuery.isNotEmpty() && currentQuery != lastSearchQuery) {
+                    lastSearchQuery = currentQuery
+                    navigateToSearch(currentQuery)
                 }
+            }
+        }
+
+        binding.searchEdit.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                navigateToSearch(binding.searchEdit.text.toString())
+                true
+            } else {
+                false
             }
         }
 
@@ -78,7 +87,7 @@ class MenuFragment : Fragment(R.layout.fragment_menu) {
                     hideProgressBar()
                     hideErrorMessage()
                     response.data?.let { categoryResponse ->
-                        categoryAdapter.differ.submitList(categoryResponse.categoriesBox)
+                        categoryAdapter.differ.submitList(categoryResponse.categoriesBox.distinctBy { it.id })
                         binding.recyclerCategory.setPadding(0, 0, 0, 0)
                     }
                 }

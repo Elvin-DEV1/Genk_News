@@ -47,7 +47,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         newsHomeAdapter.setOnItemClickListener {
             val bundle = Bundle().apply {
-                putSerializable("newsHome", it)
+                putString("url", it.url)
+            }
+            findNavController().navigate(R.id.action_homeFragment_to_articleFragment, bundle)
+        }
+
+        newsHomeAdapter.setOnRelatedNewsClickListener {
+            val bundle = Bundle().apply {
+                putString("url", it.url)
             }
             findNavController().navigate(R.id.action_homeFragment_to_articleFragment, bundle)
         }
@@ -61,7 +68,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     hideProgressBar()
                     hideErrorMessage()
                     response.data?.let { newsHomeResponse ->
-                        newsHomeAdapter.differ.submitList(newsHomeResponse.homeNewsPosition.data.toList())
+                        newsHomeAdapter.differ.submitList(
+                            newsHomeResponse.homeNewsPosition.data.toList()
+                                .distinctBy { it.newsId })
                         binding.recyclerHome.setPadding(0, 0, 0, 0)
                     }
                 }
