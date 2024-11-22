@@ -3,11 +3,13 @@ package com.example.genknews.presentation.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.genknews.R
 import com.example.genknews.common.entity.NewsCategory
 import com.example.genknews.common.entity.NewsCategoryRelation
 import com.example.genknews.common.entity.NewsLatest
@@ -74,14 +76,26 @@ class NewsCategoryAdapter : RecyclerView.Adapter<NewsCategoryAdapter.NewsViewHol
                 }
 
                 articleRelation.setOnClickListener {
-                    NewsRelation.visibility = if (NewsRelation.visibility == View.VISIBLE) {
+                    if (NewsRelation.visibility == View.VISIBLE) {
                         closeImage.visibility = View.INVISIBLE
                         addImage.visibility = View.VISIBLE
-                        View.GONE
+                        articleRelation.setTextColor(
+                            ContextCompat.getColor(
+                                itemView.context,
+                                R.color.colorTextCategory
+                            )
+                        )
+                        NewsRelation.visibility = View.GONE
                     } else {
                         closeImage.visibility = View.VISIBLE
                         addImage.visibility = View.INVISIBLE
-                        View.VISIBLE
+                        articleRelation.setTextColor(
+                            ContextCompat.getColor(
+                                itemView.context,
+                                R.color.colorNewsRelation
+                            )
+                        )
+                        NewsRelation.visibility = View.VISIBLE
                     }
                 }
 
@@ -96,9 +110,17 @@ class NewsCategoryAdapter : RecyclerView.Adapter<NewsCategoryAdapter.NewsViewHol
                     relatedAdapter.setOnItemClickListener { relatedNews ->
                         onRelatedNewsClickListener?.invoke(relatedNews)
                     }
-                } else {
+                }else{
                     txtNewsRelation.visibility = View.GONE
                     recyclerNewsRelation.visibility = View.GONE
+                    closeImage.visibility = View.INVISIBLE
+                    addImage.visibility = View.VISIBLE
+                    articleRelation.setTextColor(
+                        ContextCompat.getColor(
+                            itemView.context,
+                            R.color.colorTextCategory
+                        )
+                    )
                 }
             }
         }

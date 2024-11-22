@@ -71,6 +71,7 @@ dependencies {
     implementation(libs.okhttp.logging)
 
     implementation(libs.gson)
+    implementation(libs.androidx.splash.api)
 }
 
 kapt {
