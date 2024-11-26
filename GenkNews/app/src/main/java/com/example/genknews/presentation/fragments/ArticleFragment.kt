@@ -1,15 +1,19 @@
 package com.example.genknews.presentation.fragments
 
 import android.annotation.SuppressLint
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.webkit.WebResourceRequest
-import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.genknews.R
 import com.example.genknews.common.utils.Constants
 import com.example.genknews.databinding.FragmentArticleBinding
@@ -17,21 +21,44 @@ import com.example.genknews.presentation.activity.MainActivity
 import com.example.genknews.presentation.view.home.HomeViewModel
 
 class ArticleFragment : Fragment(R.layout.fragment_article) {
+    private var _binding: FragmentArticleBinding? = null
+    private val binding get() = _binding!!
     lateinit var newsViewModel: HomeViewModel
-    lateinit var binding: FragmentArticleBinding
 
-    @SuppressLint("SetJavaScriptEnabled")
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("current_url", binding.webView.url)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentArticleBinding.bind(view)
+        _binding = FragmentArticleBinding.bind(view)
 
         newsViewModel = (activity as MainActivity).homeViewModel
 
-        val newsUrl = arguments?.getString("url")
+        val savedUrl = savedInstanceState?.getString("current_url")
+        val newsUrl = savedUrl ?: arguments?.getString("url")
+        Log.d("ArticleFragment", "Received URL: $newsUrl")
 
         if (newsUrl.isNullOrEmpty()) {
             Toast.makeText(requireContext(), "URL không hợp lệ", Toast.LENGTH_SHORT).show()
+            findNavController().navigateUp()
             return
+        }
+
+        binding.close.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
+        binding.imgCopy.setOnClickListener {
+            val fullUrl = Constants.URL + newsUrl
+            copyToClipboard(fullUrl)
+            Toast.makeText(requireContext(), "Đã sao chép liên kết", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.send.setOnClickListener {
+            val fullUrl = Constants.URL + newsUrl
+            shareArticle(fullUrl)
         }
 
         binding.webView.apply {
@@ -75,7 +102,37 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
                 }
             }
 
-            loadUrl(Constants.URL+newsUrl)
+            loadUrl(Constants.URL + newsUrl)
+        }
+    }
+
+    private fun copyToClipboard(text: String) {
+        val clipboard =
+            requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText("article_url", text)
+        clipboard.setPrimaryClip(clip)
+    }
+
+    private fun shareArticle(url: String) {
+        try {
+            val shareIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, url)
+            }
+
+            val chooserIntent = Intent.createChooser(
+                shareIntent,
+                "Chia sẻ qua"
+            )
+
+            startActivity(chooserIntent)
+        } catch (e: Exception) {
+            Toast.makeText(
+                requireContext(),
+                "Không thể chia sẻ bài viết: ${e.message}",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 

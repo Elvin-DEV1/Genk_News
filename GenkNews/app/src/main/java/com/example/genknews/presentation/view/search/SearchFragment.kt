@@ -10,31 +10,24 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.genknews.R
 import com.example.genknews.common.utils.Constants
-import com.example.genknews.common.utils.Constants.Companion.SEARCH_NEWS_DELAY_TIME
 import com.example.genknews.common.utils.Resource
 import com.example.genknews.databinding.FragmentSearchBinding
 import com.example.genknews.presentation.activity.MainActivity
 import com.example.genknews.presentation.adapters.NewsSearchAdapter
 import com.example.genknews.presentation.view.home.HomeViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class SearchFragment : Fragment(R.layout.fragment_search) {
 
     lateinit var searchViewModel: HomeViewModel
-    lateinit var newsAdapter: NewsSearchAdapter
-    lateinit var retryButton: Button
-    lateinit var errorText: TextView
+    private lateinit var newsAdapter: NewsSearchAdapter
+    private lateinit var retryButton: Button
+    private lateinit var errorText: TextView
     private lateinit var backButton: ImageButton
     lateinit var itemSearchError: CardView
     lateinit var binding: FragmentSearchBinding
@@ -55,13 +48,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         searchViewModel = (activity as MainActivity).homeViewModel
         setupSearchRecycler()
 
-        arguments?.getString("search_query")?.let { query ->
-            binding.searchEdit.setText(query)
-            if (query.isNotEmpty()) {
-                searchViewModel.getSearch(query)
-            }
-        }
-
         newsAdapter.setOnItemClickListener {
             val bundle = Bundle().apply {
                 putString("url", it.url)
@@ -69,30 +55,27 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             findNavController().navigate(R.id.action_searchFragment_to_articleFragment, bundle)
         }
 
-        var job: Job? = null
-        binding.searchEdit.addTextChangedListener { editable ->
-            job?.cancel()
-            job = MainScope().launch {
-                delay(SEARCH_NEWS_DELAY_TIME)
-                editable?.let {
-                    if (editable.toString().isNotEmpty()) {
-                        searchViewModel.getSearch(editable.toString())
-                    }
-                }
+        val searchQuery = arguments?.getString("search_query")
+
+        binding.searchEdit.setText(searchQuery)
+        if (searchQuery != null) {
+            if (searchQuery.isNotEmpty()) {
+                searchViewModel.getSearch(binding.searchEdit.text.toString())
             }
         }
 
-        searchViewModel.search.observe(viewLifecycleOwner, Observer { response ->
-            when(response){
+        searchViewModel.search.observe(viewLifecycleOwner) { response ->
+            when (response) {
                 is Resource.Success<*> -> {
                     hideProgressBar()
                     hideErrorMessage()
-                    response.data?.let {newsSearchResponse ->
+                    response.data?.let { newsSearchResponse ->
                         newsAdapter.differ.submitList(
                             newsSearchResponse.news.toList().distinctBy { it.newsId })
                         binding.rvSearchResults.setPadding(0, 0, 0, 0)
                     }
                 }
+
                 is Resource.Error<*> -> {
                     hideProgressBar()
                     response.message?.let { message ->
@@ -100,11 +83,12 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                         showErrorMessage(message)
                     }
                 }
+
                 is Resource.Loading<*> -> {
                     showProgressBar()
                 }
             }
-        })
+        }
         retryButton.setOnClickListener{
             if (binding.searchEdit.text.toString().isNotEmpty()){
                 searchViewModel.getSearch(binding.searchEdit.text.toString())

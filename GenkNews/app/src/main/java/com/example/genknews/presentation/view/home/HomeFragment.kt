@@ -45,11 +45,21 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         homeViewModel = (activity as MainActivity).homeViewModel
         setupHomeRecycler()
 
-        newsHomeAdapter.setOnItemClickListener {
-            val bundle = Bundle().apply {
-                putString("url", it.url)
+        newsHomeAdapter.setOnItemClickListener { newsItem ->
+            if (newsItem.url.isNotEmpty()) {
+                val bundle = Bundle().apply {
+                    putString("url", newsItem.url)
+                }
+
+                try {
+                    findNavController().navigate(R.id.action_homeFragment_to_articleFragment, bundle)
+                } catch (e: Exception) {
+                    Log.e("HomeFragment", "Navigation error: ${e.message}")
+                    Toast.makeText(requireContext(), "Không thể mở bài viết", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(requireContext(), "Bài viết không khả dụng", Toast.LENGTH_SHORT).show()
             }
-            findNavController().navigate(R.id.action_homeFragment_to_articleFragment, bundle)
         }
 
         newsHomeAdapter.setOnRelatedNewsClickListener {
@@ -68,9 +78,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     hideProgressBar()
                     hideErrorMessage()
                     response.data?.let { newsHomeResponse ->
-                        newsHomeAdapter.differ.submitList(
-                            newsHomeResponse.homeNewsPosition.data.toList()
-                                .distinctBy { it.newsId })
+                        val distinctList = newsHomeResponse.homeNewsPosition.data.toList()
+                            .distinctBy { it.newsId }
+                        newsHomeAdapter.differ.submitList(distinctList)
                         binding.recyclerHome.setPadding(0, 0, 0, 0)
                     }
                 }

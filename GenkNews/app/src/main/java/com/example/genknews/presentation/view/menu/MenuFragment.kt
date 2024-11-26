@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.widget.AbsListView
 import android.widget.Button
 import android.widget.EditText
@@ -55,19 +54,19 @@ class MenuFragment : Fragment(R.layout.fragment_menu) {
         binding.searchEdit.addTextChangedListener { editable ->
             editable?.let {
                 val currentQuery = it.toString()
-                if (currentQuery.isNotEmpty() && currentQuery != lastSearchQuery) {
+                if (currentQuery != lastSearchQuery) {
                     lastSearchQuery = currentQuery
-                    navigateToSearch(currentQuery)
                 }
             }
         }
 
-        binding.searchEdit.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                navigateToSearch(binding.searchEdit.text.toString())
-                true
+        binding.searchButton.setOnClickListener {
+            val searchQuery = binding.searchEdit.text.toString().trim()
+            if (searchQuery.isNotEmpty()) {
+                navigateToSearch(searchQuery)
             } else {
-                false
+                Toast.makeText(requireContext(), "Please enter a search query", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
 

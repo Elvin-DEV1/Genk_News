@@ -49,6 +49,7 @@
         android:padding="@dimen/space"
         android:textSize="@dimen/text_18"
         android:fontFamily="@font/poppins"
+        android:maxLines="1"
         android:drawableTint="@color/colorSecondary"
         android:background="@drawable/edit_text_search"
         android:drawableStart="@drawable/search"

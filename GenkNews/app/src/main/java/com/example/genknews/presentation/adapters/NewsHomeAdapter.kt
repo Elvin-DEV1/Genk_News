@@ -1,8 +1,10 @@
 package com.example.genknews.presentation.adapters
 
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -14,6 +16,9 @@ import com.example.genknews.common.entity.NewsHome
 import com.example.genknews.common.entity.NewsHomeRelation
 import com.example.genknews.databinding.ItemHeadNewsBinding
 import com.example.genknews.databinding.ItemNewsHomeBinding
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 class NewsHomeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -68,12 +73,15 @@ class NewsHomeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemCount(): Int = differ.currentList.size
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val newsItem = differ.currentList[position]
+        if (position in 0 until differ.currentList.size) {
+            val newsItem = differ.currentList[position]
 
-        when (holder) {
-            is HeadNewsViewHolder -> holder.bind(newsItem)
-            is NormalNewsViewHolder -> holder.bind(newsItem)
+            when (holder) {
+                is HeadNewsViewHolder -> holder.bind(newsItem)
+                is NormalNewsViewHolder -> holder.bind(newsItem)
+            }
         }
     }
 
@@ -84,6 +92,7 @@ class NewsHomeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     inner class HeadNewsViewHolder(private val binding: ItemHeadNewsBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        @RequiresApi(Build.VERSION_CODES.O)
         fun bind(news: NewsHome) {
             with(binding) {
                 Glide.with(itemView)
@@ -93,7 +102,7 @@ class NewsHomeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 articleTitle.text = news.title
                 articleDescription.text = news.sapo
                 articleCategory.text = news.zoneName
-                articleDateTime.text = news.distributionDate
+                articleDateTime.text = formatTimeFromISO(news.distributionDate)
                 articleSource.text = news.source
 
                 root.setOnClickListener {
@@ -154,6 +163,7 @@ class NewsHomeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     inner class NormalNewsViewHolder(private val binding: ItemNewsHomeBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        @RequiresApi(Build.VERSION_CODES.O)
         fun bind(news: NewsHome) {
             with(binding) {
                 Glide.with(itemView)
@@ -163,15 +173,11 @@ class NewsHomeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 articleTitle.text = news.title
                 articleDescription.text = news.sapo
                 articleCategory.text = news.zoneName
-                articleDateTime.text = news.distributionDate
+                articleDateTime.text = formatTimeFromISO(news.distributionDate)
                 articleSource.text = news.source
 
                 root.setOnClickListener {
                     onItemClickListener?.invoke(news)
-                }
-
-                root.setOnClickListener {
-                    onRelatedNewsClickListener?.invoke(news.newsHomeRelation.get(position))
                 }
 
                 articleRelation.setOnClickListener {
@@ -209,7 +215,7 @@ class NewsHomeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     relatedAdapter.setOnItemClickListener { relatedNews ->
                         onRelatedNewsClickListener?.invoke(relatedNews)
                     }
-                }else{
+                } else {
                     txtNewsRelation.visibility = View.GONE
                     recyclerNewsRelation.visibility = View.GONE
                     closeImage.visibility = View.INVISIBLE
@@ -222,6 +228,27 @@ class NewsHomeAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     )
                 }
             }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun formatTimeFromISO(dateTime: String): String {
+        try {
+            val parsedTime = ZonedDateTime.parse(dateTime, DateTimeFormatter.ISO_ZONED_DATE_TIME)
+            val now = ZonedDateTime.now()
+
+            val diffInMinutes = ChronoUnit.MINUTES.between(parsedTime, now)
+            val diffInHours = ChronoUnit.HOURS.between(parsedTime, now)
+            val diffInDays = ChronoUnit.DAYS.between(parsedTime, now)
+
+            return when {
+                diffInMinutes < 60 -> "$diffInMinutes phút trước"
+                diffInHours < 24 -> "$diffInHours giờ trước"
+                else -> "$diffInDays ngày trước"
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return "Không xác định"
         }
     }
 

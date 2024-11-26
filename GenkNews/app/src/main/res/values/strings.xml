@@ -32,4 +32,10 @@
     <string name="close_image">Close image</string>
     <string name="theo">Theo</string>
     <string name="image_zone">Image zone</string>
+    <string name="button_copy">Button Copy</string>
+    <string name="image_send">image send</string>
+    <string name="send">Gửi</string>
+    <string name="button_close">Button close</string>
+    <string name="_10">+10</string>
+    <string name="read_more">Đọc thêm</string>
 </resources>

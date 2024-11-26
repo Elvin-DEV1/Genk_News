@@ -2,6 +2,7 @@
 <resources>
     <!-- Common -->
     <dimen name="space">8dp</dimen>
+    <dimen name="space_smaller">6dp</dimen>
     <dimen name="space_small">4dp</dimen>
     <dimen name="space_tiny">2dp</dimen>
     <dimen name="space_bonus">12dp</dimen>

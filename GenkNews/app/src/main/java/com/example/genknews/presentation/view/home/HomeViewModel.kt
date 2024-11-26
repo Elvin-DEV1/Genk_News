@@ -9,11 +9,11 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.genknews.common.entity.NewsHomeResponse
+import com.example.genknews.common.entity.CategoryNewsResponse
 import com.example.genknews.common.entity.MenuResponse
+import com.example.genknews.common.entity.NewsHomeResponse
 import com.example.genknews.common.entity.NewsLatestResponse
 import com.example.genknews.common.entity.SearchResponse
-import com.example.genknews.common.entity.CategoryNewsResponse
 import com.example.genknews.common.utils.Resource
 import com.example.genknews.control.repository.CategoryRepository
 import com.example.genknews.control.repository.NewsCategoryRepository
@@ -294,32 +294,43 @@ class HomeViewModel(app: Application,
     val search: MutableLiveData<Resource<SearchResponse>> = MutableLiveData()
     var searchResponse: SearchResponse? = null
 
-    private fun handleSearchResponse(response: Response<SearchResponse>): Resource<SearchResponse>{
-        if (response.isSuccessful){
+    private fun handleSearchResponse(response: Response<SearchResponse>): Resource<SearchResponse> {
+        if (response.isSuccessful) {
             response.body()?.let { resultResponse ->
-                if (searchResponse?.news  == null){
+                if (searchResponse?.news == null) {
                     searchResponse = resultResponse
-                }else{
+                } else {
                     val oldNews = searchResponse?.news
                     val newNews = resultResponse.news
                     oldNews?.addAll(newNews)
                 }
-                return  Resource.Success(searchResponse ?: resultResponse)
+                return Resource.Success(searchResponse ?: resultResponse)
             }
         }
         return Resource.Error(response.body(), response.message())
     }
 
-    private suspend fun searchInternet(searchQuery: String) {
+
+    private suspend fun searchInternet(
+        searchQuery: String,
+        pageIndex: String = "1",
+        pageSize: String = "20"
+    ) {
         search.postValue(Resource.Loading())
         try {
             if (internetConnection(this.getApplication())) {
                 try {
-                    val response = newsSearchRepository.search(searchQuery)
+                    val response = newsSearchRepository.search(
+                        keywords = searchQuery,
+                        pageIndex = pageIndex,
+                        pageSize = pageSize
+                    )
                     search.postValue(handleSearchResponse(response))
                 } catch (e: Exception) {
                     Log.e("HomeViewModel", "Error fetching search data", e)
-                    search.postValue(Resource.Error(searchResponse, e.message ?: "An error occurred"))
+                    search.postValue(
+                        Resource.Error(searchResponse, e.message ?: "An error occurred")
+                    )
                 }
             } else {
                 search.postValue(Resource.Error(searchResponse, "No internet connection"))
@@ -335,13 +346,21 @@ class HomeViewModel(app: Application,
         }
     }
 
-    fun getSearch(searchQuery: String) = viewModelScope.launch {
+
+    fun getSearch(
+        searchQuery: String,
+        pageIndex: String = "1",
+        pageSize: String = "20"
+    ) = viewModelScope.launch {
         Log.d("HomeViewModel", "Starting getSearch()")
         try {
-            searchInternet(searchQuery)
+            searchInternet(searchQuery, pageIndex, pageSize)
         } catch (e: Exception) {
             Log.e("HomeViewModel", "Error in getSearch()", e)
-            search.postValue(Resource.Error(searchResponse, "Failed to fetch search data: ${e.message}"))
+            search.postValue(
+                Resource.Error(searchResponse, "Failed to fetch search data: ${e.message}")
+            )
         }
     }
+
 }

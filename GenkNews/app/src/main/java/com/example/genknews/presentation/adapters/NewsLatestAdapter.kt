@@ -1,8 +1,10 @@
 package com.example.genknews.presentation.adapters
 
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -13,6 +15,9 @@ import com.example.genknews.R
 import com.example.genknews.common.entity.NewsLatest
 import com.example.genknews.common.entity.NewsLatestRelation
 import com.example.genknews.databinding.ItemNewsHomeBinding
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 class NewsLatestAdapter : RecyclerView.Adapter<NewsLatestAdapter.NewsViewHolder>() {
 
@@ -45,6 +50,7 @@ class NewsLatestAdapter : RecyclerView.Adapter<NewsLatestAdapter.NewsViewHolder>
 
     override fun getItemCount(): Int = differ.currentList.size
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
         val newsItem = differ.currentList[position]
         holder.bind(newsItem)
@@ -57,6 +63,7 @@ class NewsLatestAdapter : RecyclerView.Adapter<NewsLatestAdapter.NewsViewHolder>
     inner class NewsViewHolder(private val binding: ItemNewsHomeBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        @RequiresApi(Build.VERSION_CODES.O)
         fun bind(news: NewsLatest) {
             with(binding) {
                 Glide.with(itemView)
@@ -66,7 +73,7 @@ class NewsLatestAdapter : RecyclerView.Adapter<NewsLatestAdapter.NewsViewHolder>
                 articleTitle.text = news.title
                 articleDescription.text = news.sapo
                 articleCategory.text = news.zoneName
-                articleDateTime.text = news.distributionDate
+                articleDateTime.text = formatTimeFromISO(news.distributionDate)
                 articleSource.text = news.source
 
                 root.setOnClickListener {
@@ -121,6 +128,27 @@ class NewsLatestAdapter : RecyclerView.Adapter<NewsLatestAdapter.NewsViewHolder>
                     )
                 }
             }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun formatTimeFromISO(dateTime: String): String {
+        try {
+            val parsedTime = ZonedDateTime.parse(dateTime, DateTimeFormatter.ISO_ZONED_DATE_TIME)
+            val now = ZonedDateTime.now()
+
+            val diffInMinutes = ChronoUnit.MINUTES.between(parsedTime, now)
+            val diffInHours = ChronoUnit.HOURS.between(parsedTime, now)
+            val diffInDays = ChronoUnit.DAYS.between(parsedTime, now)
+
+            return when {
+                diffInMinutes < 60 -> "$diffInMinutes phút trước"
+                diffInHours < 24 -> "$diffInHours giờ trước"
+                else -> "$diffInDays ngày trước"
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return "Không xác định"
         }
     }
 

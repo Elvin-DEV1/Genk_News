@@ -1,6 +1,7 @@
 package com.example.genknews.presentation.activity
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
@@ -45,5 +46,26 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.newsNavHostFragment) as NavHostFragment
         val navController = navHostFragment.navController
         binding.bottomNavigationView.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.articleFragment -> {
+                    binding.bottomNavigationView.animate()
+                        .translationY(binding.bottomNavigationView.height.toFloat())
+                        .setDuration(300)
+                        .withEndAction {
+                            binding.bottomNavigationView.visibility = View.GONE
+                        }
+                }
+                else -> {
+                    binding.bottomNavigationView.visibility = View.VISIBLE
+                    binding.bottomNavigationView.animate()
+                        .translationY(0f)
+                        .setDuration(300)
+                }
+            }
+        }
+
+
     }
 }

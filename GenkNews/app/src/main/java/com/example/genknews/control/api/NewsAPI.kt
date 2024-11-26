@@ -14,6 +14,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 
@@ -75,7 +76,6 @@ interface NewsAPI {
     ): Response<VideoDetailResponse>
 
     @POST("app/search")
-    @FormUrlEncoded
     suspend fun search(
         @Body searchRequest: SearchRequest
     ): Response<SearchResponse>
@@ -83,7 +83,7 @@ interface NewsAPI {
     data class SearchRequest(
         val keywords: String,
         val secretKey: String = API_KEY,
-        val pageIndex: String = "2",
+        val pageIndex: String = "1",
         val pageSize: String = "20"
     )
 }

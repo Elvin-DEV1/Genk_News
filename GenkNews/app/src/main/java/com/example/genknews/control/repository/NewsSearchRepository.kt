@@ -5,8 +5,12 @@ import com.example.genknews.control.api.RetrofitInstance
 
 class NewsSearchRepository {
 
-    suspend fun search(keywords: String)
-            = RetrofitInstance.api.search(
-        NewsAPI.SearchRequest(keywords = keywords)
-    )
+    suspend fun search(keywords: String, pageIndex: String = "1", pageSize: String = "20") =
+        RetrofitInstance.api.search(
+            NewsAPI.SearchRequest(
+                keywords = keywords,
+                pageIndex = pageIndex,
+                pageSize = pageSize
+            )
+        )
 }

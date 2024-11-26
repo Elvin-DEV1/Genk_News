@@ -76,11 +76,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/date_time"
-        android:textSize="@dimen/text_14"
+        android:textSize="@dimen/text_12"
+        android:paddingBottom="@dimen/space_smaller"
         android:layout_marginStart="8dp"
         android:textColor="@color/colorTextCategory"
         app:layout_constraintStart_toEndOf="@id/articleCategory"
-        app:layout_constraintTop_toTopOf="@id/articleCategory"
         app:layout_constraintBottom_toBottomOf="@id/articleCategory"/>
 
     <TextView

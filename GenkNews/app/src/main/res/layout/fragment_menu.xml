@@ -20,24 +20,51 @@
         android:textStyle="normal"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/searchEdit"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/search"
         android:layout_marginTop="@dimen/space_large"
-        android:layout_marginEnd="@dimen/space"
         android:layout_marginStart="@dimen/space"
-        android:padding="@dimen/space"
-        android:textSize="14sp"
-        android:fontFamily="@font/poppins"
-        android:drawableTint="@color/colorSecondary"
-        android:background="@drawable/edit_text_menu"
-        android:drawableStart="@drawable/search"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:layout_marginEnd="@dimen/space"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/menuTitle" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/menuTitle">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/searchEdit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/search"
+            android:padding="@dimen/space"
+            android:textSize="14sp"
+            android:fontFamily="@font/poppins"
+            android:drawableTint="@color/colorSecondary"
+            android:background="@drawable/edit_text_menu"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/searchButton"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <!-- Search Button -->
+        <Button
+            android:id="@+id/searchButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/read_more_button_background"
+            android:text="@string/search"
+            android:textColor="@android:color/white"
+            android:layout_marginStart="@dimen/space"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:fontFamily="@font/poppins"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@id/searchEdit"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <TextView
         android:id="@+id/category"
@@ -49,7 +76,7 @@
         android:text="@string/category"
         android:textSize="@dimen/text_16"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/searchEdit"
+        app:layout_constraintTop_toBottomOf="@id/search"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
