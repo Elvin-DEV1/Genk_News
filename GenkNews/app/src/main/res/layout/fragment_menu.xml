@@ -39,6 +39,7 @@
             android:padding="@dimen/space"
             android:textSize="14sp"
             android:inputType="text"
+            android:imeOptions="actionSearch"
             android:maxLines="1"
             android:fontFamily="@font/poppins"
             android:drawableTint="@color/colorSecondary"

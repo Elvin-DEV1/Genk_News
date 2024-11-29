@@ -6,12 +6,15 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.AbsListView
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,22 +36,51 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     private lateinit var backButton: ImageButton
     lateinit var itemSearchError: CardView
     lateinit var binding: FragmentSearchBinding
+    private var lastSearchQuery = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSearchBinding.bind(view)
 
         itemSearchError = view.findViewById(R.id.itemSearchError)
-        val inflater =
-            requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val view: View = inflater.inflate(R.layout.item_error, null)
-
         retryButton = view.findViewById(R.id.retryButton)
         errorText = view.findViewById(R.id.errorText)
         backButton = binding.btnBack
 
         searchViewModel = (activity as MainActivity).homeViewModel
         setupSearchRecycler()
+
+        val searchQuery = arguments?.getString("search_query") ?: ""
+        binding.searchEdit.setText(searchQuery)
+
+        if (searchQuery.isNotEmpty()) {
+            performSearch(searchQuery)
+        }
+
+        binding.searchEdit.addTextChangedListener { editable ->
+            val currentQuery = editable.toString().trim()
+            if (currentQuery != lastSearchQuery) {
+                lastSearchQuery = currentQuery
+                if (currentQuery.isNotEmpty()) {
+                    performSearch(currentQuery)
+                } else {
+                    clearSearchResults()
+                }
+            }
+        }
+
+        binding.searchEdit.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                val query = binding.searchEdit.text.toString().trim()
+                if (query.isNotEmpty()) {
+                    performSearch(query)
+                    val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(binding.searchEdit.windowToken, 0)
+                    return@setOnEditorActionListener true
+                }
+            }
+            false
+        }
 
         newsAdapter.setOnItemClickListener {
             val bundle = Bundle().apply {
@@ -57,11 +89,30 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             findNavController().navigate(R.id.action_searchFragment_to_articleFragment, bundle)
         }
 
-        val searchQuery = arguments?.getString("search_query")
+        backButton.setOnClickListener {
+            findNavController().navigateUp()
+        }
 
-        binding.searchEdit.setText(searchQuery)
-        searchViewModel.getSearch(searchQuery.toString(), "1", "20")
+        binding.tvCancel.setOnClickListener {
+            findNavController().navigateUp()
+        }
 
+        retryButton.setOnClickListener {
+            val query = binding.searchEdit.text.toString()
+            if (query.isNotEmpty()) {
+                performSearch(query)
+            } else {
+                hideErrorMessage()
+            }
+        }
+    }
+
+    private fun performSearch(query: String) {
+        searchViewModel.getSearch(query, "1", "20")
+        observeSearchResults(query)
+    }
+
+    private fun observeSearchResults(searchQuery: String) {
         searchViewModel.search.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Success<*> -> {
@@ -69,12 +120,10 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                     hideErrorMessage()
                     response.data?.let { newsSearchResponse ->
                         val filteredList = newsSearchResponse.news.toList()
-                            .distinctBy { it.zoneName }
-                            .filter { it.title.contains(searchQuery ?: "", ignoreCase = true) }
+                            .distinctBy { it.title }
+                            .filter { it.title.contains(searchQuery, ignoreCase = true) }
 
-                        newsAdapter.differ.submitList(emptyList()) {
-                            newsAdapter.differ.submitList(filteredList)
-                        }
+                        newsAdapter.differ.submitList(filteredList)
                         binding.rvSearchResults.setPadding(0, 0, 0, 0)
                     }
                 }
@@ -92,21 +141,10 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 }
             }
         }
-        retryButton.setOnClickListener{
-            if (binding.searchEdit.text.toString().isNotEmpty()){
-                searchViewModel.getSearch(binding.searchEdit.text.toString())
-            } else {
-                hideErrorMessage()
-            }
-        }
+    }
 
-        backButton.setOnClickListener {
-            findNavController().navigateUp()
-        }
-
-        binding.tvCancel.setOnClickListener {
-            findNavController().navigateUp()
-        }
+    private fun clearSearchResults() {
+        newsAdapter.differ.submitList(emptyList())
     }
 
     var isError = false
@@ -135,8 +173,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         isError = true
     }
 
-    val scrollListener = object : RecyclerView.OnScrollListener() {
-
+    private val scrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
 
@@ -151,8 +188,8 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             val isNotAtBeginning = firstVisibleItemPosition >= 0
             val isTotalMoreThanVisible = totalItemCount >= Constants.QUERY_PAGE_SIZE
             val shouldPaginate =
-                isNoErrors && isNotLoadingAndNotLastPage && isAtLastItem
-                        && isNotAtBeginning && isTotalMoreThanVisible && isScrolling
+                isNoErrors && isNotLoadingAndNotLastPage && isAtLastItem &&
+                        isNotAtBeginning && isTotalMoreThanVisible && isScrolling
             if (shouldPaginate) {
                 searchViewModel.getSearch(binding.searchEdit.text.toString())
                 isScrolling = false

@@ -85,6 +85,6 @@ interface NewsAPI {
         @SerializedName("keywords") val keywords: String,
         @SerializedName("secret_key") val secretKey: String = API_KEY,
         @SerializedName("page_index") val pageIndex: String = "1",
-        @SerializedName("page_size") val pageSize: String = "20"
+        @SerializedName("page_size") val pageSize: String = "200"
     )
 }
