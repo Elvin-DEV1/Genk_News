@@ -2,6 +2,8 @@ package com.example.genknews.presentation.view.search
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.AbsListView
@@ -66,8 +68,13 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                     hideProgressBar()
                     hideErrorMessage()
                     response.data?.let { newsSearchResponse ->
-                        newsAdapter.differ.submitList(
-                            newsSearchResponse.news.toList().distinctBy { it.title })
+                        val filteredList = newsSearchResponse.news.toList()
+                            .distinctBy { it.zoneName }
+                            .filter { it.title.contains(searchQuery ?: "", ignoreCase = true) }
+
+                        newsAdapter.differ.submitList(emptyList()) {
+                            newsAdapter.differ.submitList(filteredList)
+                        }
                         binding.rvSearchResults.setPadding(0, 0, 0, 0)
                     }
                 }

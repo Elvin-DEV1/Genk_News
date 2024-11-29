@@ -80,11 +80,17 @@ class NewsSearchAdapter : RecyclerView.Adapter<NewsSearchAdapter.NewsSearchViewH
             val diffInMinutes = ChronoUnit.MINUTES.between(parsedTime, now)
             val diffInHours = ChronoUnit.HOURS.between(parsedTime, now)
             val diffInDays = ChronoUnit.DAYS.between(parsedTime, now)
+            val diffInWeeks = ChronoUnit.WEEKS.between(parsedTime, now)
+            val diffInMonths = ChronoUnit.MONTHS.between(parsedTime, now)
+            val diffInYears = ChronoUnit.YEARS.between(parsedTime, now)
 
             return when {
                 diffInMinutes < 60 -> "$diffInMinutes phút trước"
                 diffInHours < 24 -> "$diffInHours giờ trước"
-                else -> "$diffInDays ngày trước"
+                diffInDays < 7 -> "$diffInDays ngày trước"
+                diffInWeeks < 4 -> "$diffInWeeks tuần trước"
+                diffInMonths < 12 -> "$diffInMonths tháng trước"
+                else -> "$diffInYears năm trước"
             }
         } catch (e: Exception) {
             e.printStackTrace()

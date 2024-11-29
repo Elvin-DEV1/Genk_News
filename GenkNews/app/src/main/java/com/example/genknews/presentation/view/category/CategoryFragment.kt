@@ -73,7 +73,12 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
                     hideProgressBar()
                     hideErrorMessage()
                     response.data?.let { newsCategoryResponse ->
-                        newsCategoryAdapter.differ.submitList(newsCategoryResponse.news.distinctBy { it.newsId })
+                        val filteredList = newsCategoryResponse.news.toList()
+                            .distinctBy { it.title }
+                            .filter { it.zoneName.contains(category.name, ignoreCase = true)}
+                        newsCategoryAdapter.differ.submitList(emptyList()) {
+                            newsCategoryAdapter.differ.submitList(filteredList)
+                        }
                         binding.recyclerCategory.setPadding(0, 0, 0, 0)
                     }
                 }

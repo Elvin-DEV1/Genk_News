@@ -1,6 +1,5 @@
 package com.example.genknews.presentation.fragments
 
-import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -37,7 +36,7 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
         newsViewModel = (activity as MainActivity).homeViewModel
 
         val savedUrl = savedInstanceState?.getString("current_url")
-        val newsUrl = savedUrl ?: arguments?.getString("url")
+        val newsUrl = savedUrl ?: arguments?.getString("url") ?: arguments?.getString("urlRelation")
         Log.d("ArticleFragment", "Received URL: $newsUrl")
 
         if (newsUrl.isNullOrEmpty()) {
@@ -46,18 +45,28 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
             return
         }
 
+        val fullUrl = if (arguments?.containsKey("urlRelation") == true) {
+            newsUrl
+        } else {
+            Constants.URL + newsUrl
+        }.let { url ->
+            if (url.startsWith("http://genk.vn")) {
+                url.replace("http://", "https://")
+            } else {
+                url
+            }
+        }
+
         binding.close.setOnClickListener {
             findNavController().navigateUp()
         }
 
         binding.imgCopy.setOnClickListener {
-            val fullUrl = Constants.URL + newsUrl
             copyToClipboard(fullUrl)
             Toast.makeText(requireContext(), "Đã sao chép liên kết", Toast.LENGTH_SHORT).show()
         }
 
         binding.send.setOnClickListener {
-            val fullUrl = Constants.URL + newsUrl
             shareArticle(fullUrl)
         }
 
@@ -102,7 +111,7 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
                 }
             }
 
-            loadUrl(Constants.URL + newsUrl)
+            loadUrl(fullUrl)
         }
     }
 

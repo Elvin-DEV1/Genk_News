@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.AbsListView
 import android.widget.Button
 import android.widget.EditText
@@ -58,6 +59,17 @@ class MenuFragment : Fragment(R.layout.fragment_menu) {
                     lastSearchQuery = currentQuery
                 }
             }
+        }
+
+        searchEdit.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                val searchQuery = searchEdit.text.toString().trim()
+                if (searchQuery.isNotEmpty()) {
+                    navigateToSearch(searchQuery)
+                    return@setOnEditorActionListener true
+                }
+            }
+            false
         }
 
         binding.searchButton.setOnClickListener {

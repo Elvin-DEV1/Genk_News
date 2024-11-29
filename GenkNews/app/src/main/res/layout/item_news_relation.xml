@@ -23,7 +23,7 @@
         android:layout_marginStart="@dimen/space_small"
         android:layout_marginTop="@dimen/space"
         android:ellipsize="end"
-        android:maxLines="4"
+        android:maxLines="3"
         android:textSize="14sp"
         android:text="@string/description"
         app:layout_constraintStart_toStartOf="@id/articleImage"

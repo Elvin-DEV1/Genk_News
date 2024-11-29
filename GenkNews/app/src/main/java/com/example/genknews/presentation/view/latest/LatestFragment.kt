@@ -57,7 +57,7 @@ class LatestFragment : Fragment(R.layout.fragment_latest) {
 
         newsLatestAdapter.setOnRelatedNewsClickListener {
             val bundle = Bundle().apply {
-                putString("url", it.url)
+                putString("urlRelation", it.url)
             }
             findNavController().navigate(R.id.action_latestFragment_to_articleFragment, bundle)
         }
