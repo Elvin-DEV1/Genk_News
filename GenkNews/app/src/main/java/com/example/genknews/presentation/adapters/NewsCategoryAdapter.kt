@@ -14,8 +14,6 @@ import com.bumptech.glide.Glide
 import com.example.genknews.R
 import com.example.genknews.common.entity.NewsCategory
 import com.example.genknews.common.entity.NewsCategoryRelation
-import com.example.genknews.common.entity.NewsLatest
-import com.example.genknews.common.entity.NewsLatestRelation
 import com.example.genknews.databinding.ItemNewsHomeBinding
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter

@@ -58,11 +58,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         val searchQuery = arguments?.getString("search_query")
 
         binding.searchEdit.setText(searchQuery)
-        if (searchQuery != null) {
-            if (searchQuery.isNotEmpty()) {
-                searchViewModel.getSearch(binding.searchEdit.text.toString())
-            }
-        }
+        searchViewModel.getSearch(searchQuery.toString(), "1", "20")
 
         searchViewModel.search.observe(viewLifecycleOwner) { response ->
             when (response) {
@@ -71,7 +67,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                     hideErrorMessage()
                     response.data?.let { newsSearchResponse ->
                         newsAdapter.differ.submitList(
-                            newsSearchResponse.news.toList().distinctBy { it.newsId })
+                            newsSearchResponse.news.toList().distinctBy { it.title })
                         binding.rvSearchResults.setPadding(0, 0, 0, 0)
                     }
                 }
@@ -98,6 +94,10 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         }
 
         backButton.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
+        binding.tvCancel.setOnClickListener {
             findNavController().navigateUp()
         }
     }

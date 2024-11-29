@@ -10,11 +10,12 @@ import com.example.genknews.common.entity.VideoDetailResponse
 import com.example.genknews.common.entity.VideoZoneResponse
 import com.example.genknews.common.entity.CategoryNewsResponse
 import com.example.genknews.common.utils.Constants.Companion.API_KEY
+import com.google.gson.annotations.SerializedName
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Field
+import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 
@@ -81,9 +82,9 @@ interface NewsAPI {
     ): Response<SearchResponse>
 
     data class SearchRequest(
-        val keywords: String,
-        val secretKey: String = API_KEY,
-        val pageIndex: String = "1",
-        val pageSize: String = "20"
+        @SerializedName("keywords") val keywords: String,
+        @SerializedName("secret_key") val secretKey: String = API_KEY,
+        @SerializedName("page_index") val pageIndex: String = "1",
+        @SerializedName("page_size") val pageSize: String = "20"
     )
 }
